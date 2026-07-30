@@ -9,7 +9,7 @@ reimplement Element logic.
 | [`filecheck-js`](packages/element-js) | npm | Typed async loader for the CDN Element script + all shared TypeScript types |
 | [`filecheck-react`](packages/react) | npm | React component + hook wrapping the Element |
 | [`filecheck-vue`](packages/vue) | npm | Vue 3 component + composable wrapping the Element |
-| [`filecheck`](packages/node) | npm | Server SDK: jobs API, uploads, webhooks, `jobs.verify()` |
+| [`filecheck-node`](packages/node) | npm | Server SDK: jobs API, uploads, webhooks, `jobs.verify()` |
 | [`filecheck/filecheck-php`](filecheck-php) | Packagist | PHP server SDK mirroring `filecheck` (standalone repo, nested here) |
 
 ## Development

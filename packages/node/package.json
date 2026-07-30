@@ -1,5 +1,5 @@
 {
-  "name": "filecheck",
+  "name": "filecheck-node",
   "version": "0.1.0",
   "description": "Filecheck server SDK for Node.js — jobs, uploads, webhooks, and server-side job verification",
   "license": "MIT",

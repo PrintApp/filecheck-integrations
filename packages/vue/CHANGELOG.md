@@ -13,7 +13,7 @@
     imperative ref.
   - `filecheck-vue`: `FilecheckPlugin`, `useFilecheck()`, and `<FilecheckIntake>` with Vue-style
     events, `v-model:jobId`, and Nuxt-safe SSR behavior.
-  - `filecheck`: server SDK — jobs (create/preflight/previews/fix/validate/optimize with
+  - `filecheck-node`: server SDK — jobs (create/preflight/previews/fix/validate/optimize with
     `wait` normalization, retrieve, runs, list/iterate, delete, waitUntilTerminal), two-leg
     uploads, orders, read-only library resources, typed errors, GET-only retries, `jobs.verify()`
     fulfillment gate, and `webhooks.constructEvent` (parse-first; signing scheme pending upstream).
