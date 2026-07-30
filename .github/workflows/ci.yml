@@ -19,8 +19,9 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
-      - run: pnpm typecheck
+      # build first: react/vue resolve filecheck-js via its dist entry points
       - run: pnpm build
+      - run: pnpm typecheck
       - run: pnpm size
 
   test:
@@ -36,6 +37,8 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # build first: react/vue tests resolve filecheck-js via its dist entry points
+      - run: pnpm build
       # Switch to the matrix Node for the actual test run; invoke vitest
       # directly so the pnpm CLI (which needs Node 22+) stays out of the path.
       - uses: actions/setup-node@v4
