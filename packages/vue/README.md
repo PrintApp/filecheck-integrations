@@ -1,27 +1,27 @@
-# @filecheck/vue
+# filecheck-vue
 
 Vue 3 component and composable for the [Filecheck](https://filecheck.io) Element. A thin wrapper
-over [`@filecheck/element-js`](../element-js) — the Element always loads from the Filecheck CDN.
+over [`filecheck-js`](../element-js) — the Element always loads from the Filecheck CDN.
 
 Requires Vue ≥ 3.3 (Composition API). SSR-safe for Nuxt: no `window` access until `onMounted`.
 
 ## Install
 
 ```bash
-npm install @filecheck/vue @filecheck/element-js
+npm install filecheck-vue filecheck-js
 ```
 
 ## Quickstart
 
 ```ts
 // main.ts
-import { FilecheckPlugin } from '@filecheck/vue';
+import { FilecheckPlugin } from 'filecheck-vue';
 app.use(FilecheckPlugin, { publishableKey: 'pk_your_publishable_key' });
 ```
 
 ```vue
 <script setup lang="ts">
-import { FilecheckIntake } from '@filecheck/vue';
+import { FilecheckIntake } from 'filecheck-vue';
 import { ref } from 'vue';
 
 const jobId = ref('');
@@ -72,7 +72,7 @@ Template ref exposes `element` (the raw `FilecheckIntakeElement`), `focus()`, `b
 Returns `Readonly<ShallowRef<FilecheckInstance | null>>` for imperative use (e.g. creating a
 `report` element). Throws if the plugin is not installed.
 
-All `@filecheck/element-js` types are re-exported from this package.
+All `filecheck-js` types are re-exported from this package.
 
 ## Example
 

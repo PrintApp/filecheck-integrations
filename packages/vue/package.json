@@ -1,5 +1,5 @@
 {
-  "name": "@filecheck/vue",
+  "name": "filecheck-vue",
   "version": "0.1.0",
   "description": "Vue 3 component and composable for the Filecheck Element",
   "license": "MIT",
@@ -39,11 +39,11 @@
     "provenance": true
   },
   "peerDependencies": {
-    "@filecheck/element-js": "^0.1.0",
+    "filecheck-js": "^0.1.0",
     "vue": "^3.3.0"
   },
   "devDependencies": {
-    "@filecheck/element-js": "workspace:*",
+    "filecheck-js": "workspace:*",
     "@vue/test-utils": "^2.4.6",
     "@vue/server-renderer": "^3.5.13",
     "jsdom": "^25.0.1",

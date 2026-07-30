@@ -1,7 +1,7 @@
-# @filecheck/react
+# filecheck-react
 
 React components and hooks for the [Filecheck](https://filecheck.io) Element. A thin wrapper over
-[`@filecheck/element-js`](../element-js) — the Element itself always loads from the Filecheck CDN.
+[`filecheck-js`](../element-js) — the Element itself always loads from the Filecheck CDN.
 
 Requires React ≥ 18. All entry points carry `'use client'`, so the package works in the Next.js
 App Router with no configuration.
@@ -9,14 +9,14 @@ App Router with no configuration.
 ## Install
 
 ```bash
-npm install @filecheck/react @filecheck/element-js
+npm install filecheck-react filecheck-js
 ```
 
 ## Quickstart
 
 ```tsx
-import { loadFilecheck } from '@filecheck/element-js';
-import { FilecheckProvider, FilecheckIntake } from '@filecheck/react';
+import { loadFilecheck } from 'filecheck-js';
+import { FilecheckProvider, FilecheckIntake } from 'filecheck-react';
 import { useState } from 'react';
 
 const filecheckPromise = loadFilecheck('pk_your_publishable_key');
@@ -77,7 +77,7 @@ const ref = useRef<FilecheckIntakeRef>(null);
 Returns the resolved `FilecheckInstance` (or `null` while loading) for imperative use — e.g.
 creating a `report` element yourself. Throws outside `<FilecheckProvider>`.
 
-All `@filecheck/element-js` types are re-exported from this package.
+All `filecheck-js` types are re-exported from this package.
 
 ## Example
 

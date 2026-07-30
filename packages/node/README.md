@@ -1,4 +1,4 @@
-# @filecheck/node
+# filecheck
 
 Filecheck server SDK for Node.js 18+ — jobs, uploads, webhooks, and the server-side job
 verification your fulfillment path must run before trusting a browser-submitted `jobId`.
@@ -8,7 +8,7 @@ Zero runtime dependencies (built-in `fetch`). ESM + CJS + full TypeScript types.
 ## Install
 
 ```bash
-npm install @filecheck/node
+npm install filecheck
 ```
 
 ## Quickstart — verify a job before fulfilling
@@ -18,7 +18,7 @@ The browser Element gives the customer a `jobId`; never trust it blind. Verify s
 **Express**
 
 ```ts
-import Filecheck from '@filecheck/node';
+import Filecheck from 'filecheck';
 const fc = new Filecheck(process.env.FILECHECK_SECRET_KEY);
 
 app.post('/checkout', async (req, res) => {
@@ -34,7 +34,7 @@ app.post('/checkout', async (req, res) => {
 **Next.js (App Router route handler)**
 
 ```ts
-import Filecheck from '@filecheck/node';
+import Filecheck from 'filecheck';
 const fc = new Filecheck(process.env.FILECHECK_SECRET_KEY!);
 
 export async function POST(request: Request) {

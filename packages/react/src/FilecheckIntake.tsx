@@ -11,7 +11,7 @@ import type {
   IntakeUiOverride,
   Presentation,
   ProofPayload,
-} from '@filecheck/element-js';
+} from 'filecheck-js';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import type { CSSProperties } from 'react';
 import { useFilecheck } from './FilecheckProvider.js';

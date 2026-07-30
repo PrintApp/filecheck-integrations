@@ -1,5 +1,5 @@
 {
-  "name": "@filecheck/react",
+  "name": "filecheck-react",
   "version": "0.1.0",
   "description": "React components and hooks for the Filecheck Element",
   "license": "MIT",
@@ -39,11 +39,11 @@
     "provenance": true
   },
   "peerDependencies": {
-    "@filecheck/element-js": "^0.1.0",
+    "filecheck-js": "^0.1.0",
     "react": ">=18"
   },
   "devDependencies": {
-    "@filecheck/element-js": "workspace:*",
+    "filecheck-js": "workspace:*",
     "@testing-library/react": "^16.1.0",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",

@@ -44,7 +44,7 @@ importers:
 
   packages/element-js/examples/vanilla-vite:
     dependencies:
-      '@filecheck/element-js':
+      filecheck-js:
         specifier: workspace:*
         version: link:../..
     devDependencies:
@@ -72,9 +72,6 @@ importers:
 
   packages/react:
     devDependencies:
-      '@filecheck/element-js':
-        specifier: workspace:*
-        version: link:../element-js
       '@testing-library/react':
         specifier: ^16.1.0
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -84,6 +81,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.5
         version: 18.3.7(@types/react@18.3.31)
+      filecheck-js:
+        specifier: workspace:*
+        version: link:../element-js
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1
@@ -105,10 +105,10 @@ importers:
 
   packages/react/examples/react-vite:
     dependencies:
-      '@filecheck/element-js':
+      filecheck-js:
         specifier: workspace:*
         version: link:../../../element-js
-      '@filecheck/react':
+      filecheck-react:
         specifier: workspace:*
         version: link:../..
       react:
@@ -136,15 +136,15 @@ importers:
 
   packages/vue:
     devDependencies:
-      '@filecheck/element-js':
-        specifier: workspace:*
-        version: link:../element-js
       '@vue/server-renderer':
         specifier: ^3.5.13
         version: 3.5.40
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.11(@vue/compiler-dom@3.5.40)(@vue/server-renderer@3.5.40)(vue@3.5.40(typescript@5.9.3))
+      filecheck-js:
+        specifier: workspace:*
+        version: link:../element-js
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1
@@ -163,10 +163,10 @@ importers:
 
   packages/vue/examples/vue-vite:
     dependencies:
-      '@filecheck/element-js':
+      filecheck-js:
         specifier: workspace:*
         version: link:../../../element-js
-      '@filecheck/vue':
+      filecheck-vue:
         specifier: workspace:*
         version: link:../..
       vue:

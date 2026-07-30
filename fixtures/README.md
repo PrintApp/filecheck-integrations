@@ -1,6 +1,6 @@
 # Shared API fixtures
 
-Canonical Filecheck REST API response shapes used by both the `@filecheck/node` test suite and
+Canonical Filecheck REST API response shapes used by both the `filecheck` test suite and
 (as a synced copy) the `filecheck-php` test suite, so the two SDKs assert against identical
 payloads.
 

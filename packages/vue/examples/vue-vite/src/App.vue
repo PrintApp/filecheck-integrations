@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FilecheckIntake } from '@filecheck/vue';
+import { FilecheckIntake } from 'filecheck-vue';
 import { ref } from 'vue';
 
 const WORKFLOW_ID = import.meta.env.VITE_FILECHECK_WORKFLOW ?? 'wf_demo';

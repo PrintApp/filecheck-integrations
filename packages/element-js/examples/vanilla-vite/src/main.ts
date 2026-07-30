@@ -1,4 +1,4 @@
-import { loadFilecheck } from '@filecheck/element-js';
+import { loadFilecheck } from 'filecheck-js';
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_FILECHECK_PK ?? 'pk_test123';
 const WORKFLOW_ID = import.meta.env.VITE_FILECHECK_WORKFLOW ?? 'wf_demo';

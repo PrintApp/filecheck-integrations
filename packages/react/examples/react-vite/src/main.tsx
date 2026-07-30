@@ -1,5 +1,5 @@
-import { loadFilecheck } from '@filecheck/element-js';
-import { FilecheckIntake, FilecheckProvider } from '@filecheck/react';
+import { loadFilecheck } from 'filecheck-js';
+import { FilecheckIntake, FilecheckProvider } from 'filecheck-react';
 import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 

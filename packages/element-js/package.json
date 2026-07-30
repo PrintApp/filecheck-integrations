@@ -1,5 +1,5 @@
 {
-  "name": "@filecheck/element-js",
+  "name": "filecheck-js",
   "version": "0.1.0",
   "description": "Typed loader for the Filecheck Element, plus all shared Element TypeScript types",
   "license": "MIT",

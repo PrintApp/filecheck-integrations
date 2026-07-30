@@ -6,11 +6,11 @@ reimplement Element logic.
 
 | Package | Registry | Purpose |
 |---|---|---|
-| [`@filecheck/element-js`](packages/element-js) | npm | Typed async loader for the CDN Element script + all shared TypeScript types |
-| [`@filecheck/react`](packages/react) | npm | React component + hook wrapping the Element |
-| [`@filecheck/vue`](packages/vue) | npm | Vue 3 component + composable wrapping the Element |
-| [`@filecheck/node`](packages/node) | npm | Server SDK: jobs API, uploads, webhooks, `jobs.verify()` |
-| [`filecheck/filecheck-php`](filecheck-php) | Packagist | PHP server SDK mirroring `@filecheck/node` (standalone repo, nested here) |
+| [`filecheck-js`](packages/element-js) | npm | Typed async loader for the CDN Element script + all shared TypeScript types |
+| [`filecheck-react`](packages/react) | npm | React component + hook wrapping the Element |
+| [`filecheck-vue`](packages/vue) | npm | Vue 3 component + composable wrapping the Element |
+| [`filecheck`](packages/node) | npm | Server SDK: jobs API, uploads, webhooks, `jobs.verify()` |
+| [`filecheck/filecheck-php`](filecheck-php) | Packagist | PHP server SDK mirroring `filecheck` (standalone repo, nested here) |
 
 ## Development
 
@@ -33,6 +33,6 @@ and start at `0.1.0` (1.0.0 only after the Element API is confirmed stable).
 
 ## Type vendoring
 
-`@filecheck/element-js` vendors the Element's public types from the `filecheck` repo
+`filecheck-js` vendors the Element's public types from the `filecheck` repo
 (`packages/element/src`). Run `pnpm sync:types` (with a sibling `../filecheck` checkout, or
 `FILECHECK_REPO=<path>`) to diff the vendored copies against upstream before a release.

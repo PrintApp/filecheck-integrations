@@ -4,7 +4,7 @@ import type {
   FilecheckInstance,
   FilecheckIntakeElement,
   IntakeElementOptions,
-} from '@filecheck/element-js';
+} from 'filecheck-js';
 import { vi } from 'vitest';
 
 type Handler = (payload?: unknown) => void;

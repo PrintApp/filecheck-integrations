@@ -9,7 +9,7 @@ export default defineConfig({
   treeshake: true,
   target: 'es2019',
   platform: 'browser',
-  external: ['vue', '@filecheck/element-js'],
+  external: ['vue', 'filecheck-js'],
   outExtension({ format }) {
     return { js: format === 'cjs' ? '.cjs' : '.js' };
   },

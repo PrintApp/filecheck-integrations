@@ -9,7 +9,7 @@ export default defineConfig({
   treeshake: true,
   target: 'es2019',
   platform: 'browser',
-  external: ['react', '@filecheck/element-js'],
+  external: ['react', 'filecheck-js'],
   banner: { js: "'use client';" },
   outExtension({ format }) {
     return { js: format === 'cjs' ? '.cjs' : '.js' };

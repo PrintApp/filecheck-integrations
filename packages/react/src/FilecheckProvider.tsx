@@ -1,4 +1,4 @@
-import type { FilecheckInstance } from '@filecheck/element-js';
+import type { FilecheckInstance } from 'filecheck-js';
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 

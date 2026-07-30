@@ -1,4 +1,4 @@
-# @filecheck/element-js
+# filecheck-js
 
 Typed loader for the [Filecheck](https://filecheck.io) Element — plus every shared Element
 TypeScript type. Modeled on `@stripe/stripe-js`: this package is a thin shim; the Element itself
@@ -8,13 +8,13 @@ npm releases. Zero runtime dependencies, < 3 kB min+gzip.
 ## Install
 
 ```bash
-npm install @filecheck/element-js
+npm install filecheck-js
 ```
 
 ## Quickstart
 
 ```ts
-import { loadFilecheck } from '@filecheck/element-js';
+import { loadFilecheck } from 'filecheck-js';
 
 const fc = await loadFilecheck('pk_your_publishable_key');
 if (fc) {

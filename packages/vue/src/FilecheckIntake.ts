@@ -11,7 +11,7 @@ import type {
   IntakeUiOverride,
   Presentation,
   ProofPayload,
-} from '@filecheck/element-js';
+} from 'filecheck-js';
 import {
   computed,
   defineComponent,

@@ -1,4 +1,4 @@
-import { FilecheckPlugin } from '@filecheck/vue';
+import { FilecheckPlugin } from 'filecheck-vue';
 import { createApp } from 'vue';
 import App from './App.vue';
 

@@ -1,5 +1,5 @@
-import { loadFilecheck } from '@filecheck/element-js';
-import type { FilecheckInstance, LoadFilecheckOptions } from '@filecheck/element-js';
+import { loadFilecheck } from 'filecheck-js';
+import type { FilecheckInstance, LoadFilecheckOptions } from 'filecheck-js';
 import { inject, readonly, shallowRef } from 'vue';
 import type { App, InjectionKey, Plugin, Ref, ShallowRef } from 'vue';
 
