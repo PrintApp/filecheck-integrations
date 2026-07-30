@@ -28,8 +28,10 @@ jobs:
       - name: Create release PR or publish
         uses: changesets/action@v1
         with:
-          publish: pnpm release
-          version: pnpm version
+          publish: pnpm run release
+          # `pnpm version` resolves to pnpm's builtin (needs a semver arg) —
+          # `run` forces the package.json script (changeset version).
+          version: pnpm run version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
