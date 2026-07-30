@@ -22,21 +22,29 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": ["filecheck", "vue", "nuxt", "upload", "preflight", "element"],
+  "keywords": [
+    "filecheck",
+    "vue",
+    "nuxt",
+    "upload",
+    "preflight",
+    "element"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/filecheck/filecheck-integrations.git",
     "directory": "packages/vue"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "peerDependencies": {
     "filecheck-js": "^0.1.0",

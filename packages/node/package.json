@@ -22,7 +22,9 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -31,15 +33,22 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": ["filecheck", "api", "sdk", "upload", "preflight", "pdf", "validation"],
+  "keywords": [
+    "filecheck",
+    "api",
+    "sdk",
+    "upload",
+    "preflight",
+    "pdf",
+    "validation"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/filecheck/filecheck-integrations.git",
     "directory": "packages/node"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "devDependencies": {
     "@types/node": "^18.19.70",
