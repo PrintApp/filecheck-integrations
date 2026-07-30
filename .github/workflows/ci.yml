@@ -6,22 +6,39 @@ on:
   pull_request:
 
 jobs:
-  test:
+  checks:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [18, 20, 22]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
+      # pnpm 11 itself needs Node >= 22.13; the package runtime floor (Node 18)
+      # is exercised by the test matrix below.
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm build
-      - run: pnpm test
       - run: pnpm size
-        if: matrix.node == 20
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [18, 20, 22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Switch to the matrix Node for the actual test run; invoke vitest
+      # directly so the pnpm CLI (which needs Node 22+) stays out of the path.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npx vitest run
