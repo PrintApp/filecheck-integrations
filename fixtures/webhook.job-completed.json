@@ -1,0 +1,67 @@
+{
+  "id": "job_01jf8n2q4vxw9k3m5p7r9t1v3x",
+  "domainIdx": 42,
+  "status": "done",
+  "outcome": "pass",
+  "ruleId": "rule_business_cards",
+  "channel": "store",
+  "customerId": "cust_301",
+  "orderId": "order_5512",
+  "policy": { "onFail": "reject" },
+  "metaData": { "cartId": "cart_88112" },
+  "taskIds": ["task_01jf8n2r5wxy0l4n6q8s0u2w4y"],
+  "sourceRefs": [
+    {
+      "taskId": "task_01jf8n2r5wxy0l4n6q8s0u2w4y",
+      "bucket": "fc-uploads",
+      "key": "u/42/upload_01jf8n2p3uvw8j2l4n6p8r0t2v"
+    }
+  ],
+  "created": 1785308102000,
+  "finalized": "2026-07-29T10:15:41.000Z",
+  "tasks": [
+    {
+      "id": "task_01jf8n2r5wxy0l4n6q8s0u2w4y",
+      "status": "done",
+      "outcome": "pass",
+      "mimeType": "application/pdf",
+      "fileType": "pdf",
+      "clientRef": null,
+      "source": null,
+      "fileRef": "upload_01jf8n2p3uvw8j2l4n6p8r0t2v",
+      "sourceRef": {
+        "bucket": "fc-uploads",
+        "key": "u/42/upload_01jf8n2p3uvw8j2l4n6p8r0t2v"
+      },
+      "originalArtifact": {
+        "kind": "file",
+        "bucket": "fc-uploads",
+        "key": "u/42/upload_01jf8n2p3uvw8j2l4n6p8r0t2v",
+        "mimeType": "application/pdf",
+        "sizeBytes": 190514,
+        "fileName": "business-card.pdf"
+      },
+      "outputArtifacts": [],
+      "steps": [
+        {
+          "id": "step_preflight_1",
+          "type": "preflight",
+          "status": "done",
+          "outcome": "warn",
+          "reason": null,
+          "outputs": [],
+          "ended": "2026-07-29T10:15:12.000Z"
+        },
+        {
+          "id": "step_autofix_1",
+          "type": "autofix",
+          "status": "done",
+          "outcome": "fixed",
+          "reason": null,
+          "outputs": [],
+          "ended": "2026-07-29T10:15:31.000Z"
+        }
+      ]
+    }
+  ]
+}

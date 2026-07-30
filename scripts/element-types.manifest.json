@@ -1,0 +1,16 @@
+{
+  "packages/element/src/Filecheck.ts": "b6a726198ef87671",
+  "packages/element/src/Elements.ts": "73985848d38b06d0",
+  "packages/element/src/Element.ts": "94e15c0c6fa8580c",
+  "packages/element/src/bootstrap.ts": "d02bcf012fc5d953",
+  "packages/element/src/iife.ts": "244737fafe5fced5",
+  "packages/element/src/elements/IntakeElement.ts": "12e1849b1d90e027",
+  "packages/element/src/elements/ReportElement.ts": "380bac2e074abaf5",
+  "packages/element/src/types/intake.ts": "f5128551554baba3",
+  "packages/element/src/types/ui.ts": "1c56dc0bdb59f35d",
+  "packages/element/src/types/events.ts": "78c9f1f90172fafb",
+  "packages/element/src/types/connector.ts": "d4abfef4490b4dde",
+  "packages/element/src/types/report.ts": "27606757c6c2aa31",
+  "packages/element/src/transport/protocol.ts": "8724dfef79ac7c5b",
+  "packages/element/src/dom/connector.ts": "e3e6f2bafbc45a0f"
+}

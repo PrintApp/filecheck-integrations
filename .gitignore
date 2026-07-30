@@ -1,0 +1,14 @@
+# dependencies / builds
+node_modules/
+dist/
+*.tsbuildinfo
+coverage/
+
+# the PHP package is its own standalone git repo (Packagist root)
+/filecheck-php/
+
+# misc
+.DS_Store
+*.log
+.env
+.env.*

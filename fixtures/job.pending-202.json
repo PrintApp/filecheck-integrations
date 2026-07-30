@@ -1,0 +1,54 @@
+{
+  "pending": true,
+  "job": {
+    "id": "job_01jf8n2q4vxw9k3m5p7r9t1v3x",
+    "createdAt": "2026-07-29T10:15:02.000Z",
+    "modifiedAt": "2026-07-29T10:15:20.000Z",
+    "expiresAt": null,
+    "status": "running",
+    "outcome": null,
+    "channel": "api",
+    "ruleId": null,
+    "workflowId": null,
+    "wfPhase": null,
+    "wfStreamStatus": null,
+    "metaData": null,
+    "deliverables": [],
+    "tasks": [
+      {
+        "id": "task_01jf8n2r5wxy0l4n6q8s0u2w4y",
+        "createdAt": "2026-07-29T10:15:02.000Z",
+        "updatedAt": "2026-07-29T10:15:20.000Z",
+        "status": "running",
+        "outcome": null,
+        "fileType": "pdf",
+        "mimeType": "application/pdf",
+        "source": "https://cdn.example.com/artwork.pdf",
+        "fileRef": null,
+        "clientRef": null,
+        "jobId": "job_01jf8n2q4vxw9k3m5p7r9t1v3x",
+        "wfPhase": null,
+        "wfKind": null,
+        "originalArtifact": null,
+        "inputArtifact": null,
+        "currentArtifact": null,
+        "outputArtifacts": [],
+        "steps": [
+          {
+            "id": "step_preflight_1",
+            "type": "preflight",
+            "status": "running",
+            "outcome": null,
+            "reason": null,
+            "params": { "profileId": "default" }
+          }
+        ]
+      }
+    ],
+    "orderId": null,
+    "customerId": null,
+    "orderStatus": null,
+    "orderDetails": null,
+    "customerEmail": null
+  }
+}

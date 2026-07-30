@@ -1,0 +1,18 @@
+{
+  "fileRef": "upload_01jf8n2p3uvw8j2l4n6p8r0t2v",
+  "upload": {
+    "url": "https://fc-uploads.s3.amazonaws.com/",
+    "fields": {
+      "key": "u/42/upload_01jf8n2p3uvw8j2l4n6p8r0t2v",
+      "bucket": "fc-uploads",
+      "X-Amz-Algorithm": "AWS4-HMAC-SHA256",
+      "X-Amz-Credential": "AKIAEXAMPLE/20260729/us-east-1/s3/aws4_request",
+      "X-Amz-Date": "20260729T101500Z",
+      "Policy": "eyJleHBpcmF0aW9uIjoiMjAyNi0wNy0yOVQxMDoyMDowMFoifQ==",
+      "X-Amz-Signature": "deadbeef"
+    },
+    "method": "POST"
+  },
+  "maxBytes": 524288000,
+  "expiresIn": 300
+}

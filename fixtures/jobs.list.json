@@ -1,0 +1,47 @@
+{
+  "jobs": [
+    {
+      "id": "job_01jf8n2q4vxw9k3m5p7r9t1v3x",
+      "createdAt": "2026-07-29T10:15:02.000Z",
+      "modifiedAt": "2026-07-29T10:15:41.000Z",
+      "expiresAt": null,
+      "status": "done",
+      "outcome": "pass",
+      "channel": "store",
+      "ruleId": "rule_business_cards",
+      "workflowId": "wf_business_cards",
+      "wfPhase": "intake_done",
+      "wfStreamStatus": null,
+      "metaData": null,
+      "deliverables": [],
+      "tasks": [],
+      "orderId": null,
+      "customerId": null,
+      "orderStatus": null,
+      "orderDetails": null,
+      "customerEmail": null
+    },
+    {
+      "id": "job_01jf8m9x2tuv7h1k3m5o7q9s1u",
+      "createdAt": "2026-07-29T09:02:11.000Z",
+      "modifiedAt": "2026-07-29T09:02:55.000Z",
+      "expiresAt": null,
+      "status": "done",
+      "outcome": "fail",
+      "channel": "api",
+      "ruleId": null,
+      "workflowId": null,
+      "wfPhase": null,
+      "wfStreamStatus": null,
+      "metaData": null,
+      "deliverables": [],
+      "tasks": [],
+      "orderId": null,
+      "customerId": null,
+      "orderStatus": null,
+      "orderDetails": null,
+      "customerEmail": null
+    }
+  ],
+  "nextKey": "eyJpZCI6ImpvYl8wMWpmOG05eDJ0dXY3aDFrM201bzdxOXMxdSJ9"
+}

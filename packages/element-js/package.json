@@ -1,0 +1,56 @@
+{
+  "name": "@filecheck/element-js",
+  "version": "0.1.0",
+  "description": "Typed loader for the Filecheck Element, plus all shared Element TypeScript types",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit"
+  },
+  "keywords": ["filecheck", "upload", "preflight", "element", "loader"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/filecheck/filecheck-integrations.git",
+    "directory": "packages/element-js"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.1.6",
+    "jsdom": "^25.0.1",
+    "size-limit": "^11.1.6",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.9"
+  },
+  "size-limit": [
+    {
+      "path": "dist/index.js",
+      "limit": "3 kB"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "job_01jf8n2q4vxw9k3m5p7r9t1v3x",
+  "status": "done",
+  "outcome": "pass",
+  "runs": [
+    {
+      "id": "task_01jf8n2r5wxy0l4n6q8s0u2w4y",
+      "name": "business-card.pdf",
+      "outcome": "pass",
+      "status": "done",
+      "hasOutput": true,
+      "proofs": [
+        {
+          "url": "https://fc-artifacts.s3.amazonaws.com/d/42/job_01jf8n2q4vxw9k3m5p7r9t1v3x/proof-1.png?X-Amz-Signature=def"
+        }
+      ],
+      "downloadUrl": "https://fc-artifacts.s3.amazonaws.com/d/42/job_01jf8n2q4vxw9k3m5p7r9t1v3x/fixed.pdf?X-Amz-Signature=abc"
+    }
+  ]
+}
