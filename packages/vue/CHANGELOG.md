@@ -1,5 +1,15 @@
 # filecheck-vue
 
+## 0.1.1
+
+### Patch Changes
+
+- 46fbd7b: Correct the repository URL in the published package metadata
+  (github.com/PrintApp/filecheck-integrations). First release through the
+  token-free OIDC trusted-publishing pipeline.
+- Updated dependencies [46fbd7b]
+  - filecheck-js@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes
