@@ -1,10 +1,15 @@
+import { readFileSync } from 'node:fs';
 import { defineConfig } from 'tsup';
+
+const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 
 const shared = {
   sourcemap: true,
   treeshake: true,
   target: 'es2022',
   platform: 'node',
+  // Bakes the release version into the bundle so serverInfo can't drift.
+  env: { FILECHECK_MCP_VERSION: version },
 } as const;
 
 export default defineConfig([
