@@ -1,10 +1,13 @@
 {
-  "name": "filecheck-node",
-  "version": "0.1.1",
-  "description": "Filecheck server SDK for Node.js — jobs, uploads, webhooks, and server-side job verification",
+  "name": "filecheck-mcp",
+  "version": "0.0.0",
+  "description": "Filecheck MCP server — preflight, fix, validate, and optimize print files from AI agents",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
+  "bin": {
+    "filecheck-mcp": "./dist/cli.js"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -31,14 +34,27 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": ["filecheck", "api", "sdk", "upload", "preflight", "pdf", "validation"],
+  "keywords": [
+    "filecheck",
+    "mcp",
+    "model-context-protocol",
+    "preflight",
+    "pdf",
+    "validation",
+    "ai-agents"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/PrintApp/filecheck-integrations.git",
-    "directory": "packages/node"
+    "directory": "packages/mcp"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "filecheck-node": "workspace:^",
+    "zod": "^3.25.0"
   },
   "devDependencies": {
     "@types/node": "^18.19.70",

@@ -53,6 +53,7 @@ export type {
   CreateJobSource,
   CreateJobParams,
   WebhookParam,
+  JobContext,
   ValidateProfileCode,
   ValidateSource,
   ValidateParams,

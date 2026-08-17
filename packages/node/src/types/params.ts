@@ -38,6 +38,26 @@ export interface WebhookParam {
   headers?: Record<string, string>;
 }
 
+/**
+ * What the customer configured for this order — finished size, page count,
+ * finish. Applied to each source's `profileId` before the file is judged, so
+ * one profile can serve every size of a product. Only narrows thresholds the
+ * profile already checks; has no effect on sources without a `profileId`.
+ * Accepted by `POST /jobs`, `/jobs/preflight`, and `/jobs/fix`.
+ */
+export interface JobContext {
+  /** Finished (trim) size of the product ordered. Both dimensions required to take effect. */
+  artworkSize?: { width_mm?: number; height_mm?: number };
+  /** Expected page count. Set min === max for an exact count. */
+  pageCount?: { min?: number; max?: number };
+  /** Expected number of separate files (NOT the order quantity). */
+  fileCount?: { min?: number; max?: number };
+  /** Bleed the chosen finish requires. */
+  bleed?: { required_mm?: number };
+  /** Safe margin the chosen finish requires. */
+  safety?: { min_mm?: number };
+}
+
 /** `POST /jobs`. NOTE: `workflowId` is not accepted — it is response-only. */
 export interface CreateJobParams {
   sources: CreateJobSource[];
@@ -48,6 +68,7 @@ export interface CreateJobParams {
   policy?: { onFail: OnFailPolicy };
   webhook?: WebhookParam;
   metaData?: Record<string, unknown>;
+  context?: JobContext;
 }
 
 /** PDF validation profile codes accepted by `POST /jobs/validate`. */
@@ -88,6 +109,7 @@ export interface PreflightParams {
   sources: PreflightSource[];
   webhook?: WebhookParam;
   metaData?: Record<string, unknown>;
+  context?: JobContext;
 }
 
 export interface FixSource extends SourceRef {
@@ -101,6 +123,7 @@ export interface FixParams {
   repreflight?: boolean;
   webhook?: WebhookParam;
   metaData?: Record<string, unknown>;
+  context?: JobContext;
 }
 
 export interface PreviewsSource extends SourceRef {

@@ -1,0 +1,168 @@
+{
+  "job": {
+    "id": "job_01jf8npf01xw9k3m5p7r9t1v3x",
+    "createdAt": "2026-07-29T10:00:00.000Z",
+    "modifiedAt": "2026-07-29T10:00:21.000Z",
+    "expiresAt": null,
+    "status": "done",
+    "outcome": "fail",
+    "channel": "api",
+    "ruleId": null,
+    "workflowId": null,
+    "wfPhase": null,
+    "wfStreamStatus": null,
+    "metaData": null,
+    "deliverables": [
+      {
+        "role": "source",
+        "kind": "file",
+        "taskId": "task_01jf8npf02wxy0l4n6q8s0u2w4",
+        "bucket": "fc-artifacts",
+        "key": "d/42/job_01jf8npf01xw9k3m5p7r9t1v3x/card.pdf",
+        "mimeType": "application/pdf",
+        "sizeBytes": 482113,
+        "fileName": "card.pdf",
+        "downloadUrl": "https://fc-artifacts.s3.amazonaws.com/signed/card.pdf?X-Amz-Expires=3600",
+        "expiresIn": 3600
+      }
+    ],
+    "tasks": [
+      {
+        "id": "task_01jf8npf02wxy0l4n6q8s0u2w4",
+        "createdAt": "2026-07-29T10:00:00.000Z",
+        "updatedAt": "2026-07-29T10:00:21.000Z",
+        "status": "done",
+        "outcome": "fail",
+        "fileType": "pdf",
+        "mimeType": "application/pdf",
+        "source": "card.pdf",
+        "fileRef": "upload_01jf8n2p3uvw8j2l4n6p8r0t2v",
+        "clientRef": null,
+        "jobId": "job_01jf8npf01xw9k3m5p7r9t1v3x",
+        "wfPhase": null,
+        "wfKind": null,
+        "originalArtifact": {
+          "bucket": "fc-uploads",
+          "key": "u/42/upload_01jf8n2p3uvw8j2l4n6p8r0t2v",
+          "mimeType": "application/pdf",
+          "sizeBytes": 482113
+        },
+        "outputArtifacts": [],
+        "steps": [
+          {
+            "id": "step_01jf8npf03abc",
+            "type": "preflight",
+            "status": "done",
+            "outcome": "fail",
+            "reason": null,
+            "params": { "profileId": "profile_standard_cards" },
+            "runtimeParams": null,
+            "started": "2026-07-29T10:00:02.000Z",
+            "ended": "2026-07-29T10:00:19.000Z",
+            "duration": 17000,
+            "inStream": null,
+            "outputs": [
+              {
+                "kind": "report",
+                "bucket": "fc-artifacts",
+                "key": "r/report_01jf8npf04.json"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "orderId": null,
+    "customerId": null,
+    "orderStatus": null,
+    "orderDetails": null,
+    "customerEmail": null,
+    "results": {
+      "preflight": [
+        {
+          "taskId": "task_01jf8npf02wxy0l4n6q8s0u2w4",
+          "fileRef": "upload_01jf8n2p3uvw8j2l4n6p8r0t2v",
+          "source": "card.pdf",
+          "fileType": "pdf",
+          "mimeType": "application/pdf",
+          "status": "done",
+          "outcome": "fail",
+          "report": {
+            "source": { "name": "card.pdf", "sizeBytes": 482113 },
+            "errors": [],
+            "pdf": { "version": "1.7", "page_count": 2, "tagged": false },
+            "pages": [
+              { "page": 1, "bleed_pt": 0, "transparency": false },
+              { "page": 2, "bleed_pt": 0, "transparency": true }
+            ],
+            "fonts": [
+              { "name": "Helvetica", "embedded": false, "pages": [1, 2] },
+              { "name": "Inter-Regular", "embedded": true, "subset": true, "pages": [1] }
+            ],
+            "images": [
+              { "page": 1, "effective_dpi": 72, "color_space": "DeviceRGB" },
+              { "page": 2, "effective_dpi": 310, "color_space": "DeviceCMYK" }
+            ],
+            "spot_colors": [],
+            "evaluation": {
+              "findings": [
+                {
+                  "sectionId": "geometry",
+                  "ruleId": "bleed_missing",
+                  "severity": "reject",
+                  "target": "pages",
+                  "page": 1,
+                  "measured_mm": 0,
+                  "required_mm": 3,
+                  "autofix": {
+                    "available": true,
+                    "runner": "optimize",
+                    "strategy": "mirror_bleed",
+                    "params": { "bleed_mm": 3 }
+                  },
+                  "locate": { "boxes": [{ "page": 1, "rect": [0, 0, 595, 842] }] }
+                },
+                {
+                  "sectionId": "text",
+                  "ruleId": "font_not_embedded",
+                  "severity": "warn",
+                  "target": "fonts",
+                  "font": "Helvetica",
+                  "autofix": { "available": true, "runner": "optimize", "strategy": "embed_fonts" },
+                  "locate": { "boxes": [] }
+                },
+                {
+                  "sectionId": "images",
+                  "ruleId": "image_low_resolution",
+                  "severity": "warn",
+                  "target": "images",
+                  "page": 1,
+                  "measured_dpi": 72,
+                  "required_dpi": 150,
+                  "autofix": { "available": false },
+                  "locate": { "boxes": [{ "page": 1, "rect": [10, 10, 300, 200] }] }
+                }
+              ],
+              "passed": ["page_count", "page_size", "pdf_version"],
+              "skipped": [],
+              "summary": {
+                "fail": 1,
+                "warn": 2,
+                "ignored": 0,
+                "pass": 3,
+                "skipped": 0,
+                "autofixable": 2,
+                "autofixableFails": 1
+              },
+              "recommendedAutofix": {
+                "runner": "optimize",
+                "params": { "pdf": { "bleed": { "mode": "mirror", "bleed_mm": 3 }, "fonts": { "embed": true } } },
+                "fixes": ["bleed_missing", "font_not_embedded"]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
