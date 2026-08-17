@@ -12,21 +12,23 @@ const PROFILE = {
 
 describe('list_catalog', () => {
   it('lists compact entries without nested definitions', async () => {
+    const raster = { ...PROFILE, id: 'profile_raster_photos', title: 'Photos', kind: 'raster' };
     const harness = await connectHarness([
-      { status: 200, body: JSON.stringify({ profiles: [PROFILE] }) },
+      { status: 200, body: JSON.stringify({ profiles: [PROFILE, raster] }) },
     ]);
     const result = await call(harness.mcp, 'list_catalog', { type: 'profiles' });
     expect(result.isError).toBe(false);
     expect(harness.requests[0]!.url).toContain('/profiles');
-    expect(result.structured.items).toEqual([
-      {
-        id: 'profile_standard_cards',
-        title: 'Standard cards',
-        kind: 'pdf',
-        enabled: true,
-        source: 'store',
-      },
-    ]);
+    expect(result.structured.items[0]).toEqual({
+      id: 'profile_standard_cards',
+      title: 'Standard cards',
+      kind: 'pdf',
+      enabled: true,
+      source: 'store',
+    });
+    // The text summary breaks entries down by kind and nudges kind-matching.
+    expect(result.text).toContain('(1 pdf, 1 raster)');
+    expect(result.text).toContain("matches the file's type");
     await harness.close();
   });
 

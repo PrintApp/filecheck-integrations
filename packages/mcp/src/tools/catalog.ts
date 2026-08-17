@@ -35,6 +35,7 @@ export function registerListCatalog(server: McpServer, { client }: ToolContext):
       title: 'Browse the resource catalog',
       description:
         "Browse the tenant's resource catalog: preflight `profiles` (check-sets for check_file/fix_file), intake `rules`, `workflows`, `connectors`, and `optimize-presets` (params objects for optimize_file). " +
+        "Profiles carry a `kind` ('pdf' or 'raster') — pick a profile whose kind matches the file being checked, or most checks come back not-applicable. " +
         "Entries tagged source:'domain' are the tenant's own; source:'store' are Filecheck built-ins. Pass `id` for the full definition of one entry.",
       inputSchema: {
         type: z.enum(CATALOG_TYPES).describe('Which collection to browse.'),
@@ -58,9 +59,21 @@ export function registerListCatalog(server: McpServer, { client }: ToolContext):
           return jsonResult({ type: args.type, item }, `${args.type} entry ${args.id}.`);
         }
         const items = (await resource.list()).map(compactItem);
+        const kindCounts = new Map<string, number>();
+        for (const item of items) {
+          if (typeof item.kind === 'string')
+            kindCounts.set(item.kind, (kindCounts.get(item.kind) ?? 0) + 1);
+        }
+        const byKind = kindCounts.size
+          ? ` (${[...kindCounts].map(([kind, count]) => `${count} ${kind}`).join(', ')})`
+          : '';
+        const kindHint =
+          args.type === 'profiles' && kindCounts.size
+            ? " Pick a profile whose kind matches the file's type (pdf vs raster)."
+            : '';
         return jsonResult(
           { type: args.type, items },
-          `${items.length} ${args.type} entr${items.length === 1 ? 'y' : 'ies'}. Pass an id for the full definition.`,
+          `${items.length} ${args.type} entr${items.length === 1 ? 'y' : 'ies'}${byKind}.${kindHint} Pass an id for the full definition.`,
         );
       } catch (error) {
         return toolErrorResult(error);
