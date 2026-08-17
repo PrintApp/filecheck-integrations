@@ -1,5 +1,11 @@
 # filecheck-node
 
+## 0.1.2
+
+### Patch Changes
+
+- 1d0a846: Type `context` (JobContext — artworkSize, pageCount, fileCount, bleed, safety) on CreateJobParams, PreflightParams, and FixParams. The API already accepted it; the types now do too.
+
 ## 0.1.1
 
 ### Patch Changes

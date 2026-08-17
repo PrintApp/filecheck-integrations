@@ -1,6 +1,6 @@
 {
   "name": "filecheck-mcp",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Filecheck MCP server — preflight, fix, validate, and optimize print files from AI agents",
   "license": "MIT",
   "type": "module",
@@ -25,7 +25,9 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=18"
   },

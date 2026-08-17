@@ -1,6 +1,6 @@
 {
   "name": "filecheck-node",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Filecheck server SDK for Node.js — jobs, uploads, webhooks, and server-side job verification",
   "license": "MIT",
   "type": "module",
@@ -22,7 +22,9 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -31,7 +33,15 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": ["filecheck", "api", "sdk", "upload", "preflight", "pdf", "validation"],
+  "keywords": [
+    "filecheck",
+    "api",
+    "sdk",
+    "upload",
+    "preflight",
+    "pdf",
+    "validation"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/PrintApp/filecheck-integrations.git",
