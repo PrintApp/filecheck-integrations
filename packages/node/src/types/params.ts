@@ -177,4 +177,11 @@ export interface ListJobsParams {
   limit?: number;
   nextKey?: string;
   preview?: boolean;
+  /**
+   * Return only the jobs linked to this shop order (e.g. a Shopify numeric
+   * order id). Jobs acquire their order linkage when the shop's order
+   * webhook fires, moments after checkout — the reconciliation path for
+   * carts holding several upload items.
+   */
+  orderId?: string;
 }

@@ -36,10 +36,20 @@ export function registerJobTools(server: McpServer, { client }: ToolContext): vo
       title: 'List recent jobs',
       description:
         'List recent jobs (newest first) as lean envelopes: id, status, outcome, timestamps. ' +
-        'Use get_job for details and download URLs. Pass the returned nextKey to fetch the next page.',
+        'Use get_job for details and download URLs. Pass the returned nextKey to fetch the next page. ' +
+        'Pass orderId to get every job linked to one shop order — the reconciliation path when a cart ' +
+        'holds several upload items (each produces its own job).',
       inputSchema: {
         limit: z.number().int().min(1).max(100).optional().describe('Page size (default 20).'),
         nextKey: z.string().optional().describe('Opaque pagination cursor from a previous call.'),
+        orderId: z
+          .string()
+          .optional()
+          .describe(
+            'Return only the jobs linked to this shop order (e.g. a Shopify numeric order id). ' +
+              "Jobs acquire their order linkage when the shop's order webhook fires, moments after " +
+              'checkout — query after order creation, not mid-checkout.',
+          ),
       },
       outputSchema: {
         jobs: z.array(z.object({}).passthrough()),
@@ -53,7 +63,11 @@ export function registerJobTools(server: McpServer, { client }: ToolContext): vo
     },
     async (args) => {
       try {
-        const page = await client.jobs.list({ limit: args.limit ?? 20, nextKey: args.nextKey });
+        const page = await client.jobs.list({
+          limit: args.limit ?? 20,
+          nextKey: args.nextKey,
+          orderId: args.orderId,
+        });
         const jobs = page.jobs.map((job) => ({
           jobId: job.id,
           status: job.status,

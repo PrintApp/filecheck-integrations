@@ -48,6 +48,14 @@ describe('list_jobs', () => {
     expect(harness.requests[0]!.url).toContain('limit=2');
     await harness.close();
   });
+
+  it('passes the orderId filter through to GET /jobs', async () => {
+    const harness = await connectHarness([{ status: 200, body: fixture('jobs.list.json') }]);
+    const result = await call(harness.mcp, 'list_jobs', { orderId: '12984500650332' });
+    expect(result.isError).toBe(false);
+    expect(harness.requests[0]!.url).toContain('orderId=12984500650332');
+    await harness.close();
+  });
 });
 
 describe('delete_job', () => {

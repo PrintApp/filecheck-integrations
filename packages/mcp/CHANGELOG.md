@@ -1,5 +1,16 @@
 # filecheck-mcp
 
+## 0.2.0
+
+### Minor Changes
+
+- `jobs.list` / `list_jobs` accept an `orderId` filter: return every job linked to one shop order (the reconciliation path when a cart holds several upload items, each producing its own job). Jobs acquire their order linkage when the shop's order webhook fires, moments after checkout.
+
+### Patch Changes
+
+- Updated dependencies
+  - filecheck-node@0.2.0
+
 ## 0.1.1
 
 ### Patch Changes

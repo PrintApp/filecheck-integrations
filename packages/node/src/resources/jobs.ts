@@ -81,6 +81,7 @@ export class JobsResource {
         limit: params.limit,
         nextKey: params.nextKey,
         preview: params.preview ? 'true' : undefined,
+        orderId: params.orderId,
       },
     });
     return data;
