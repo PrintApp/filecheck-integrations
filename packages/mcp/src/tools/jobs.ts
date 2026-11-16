@@ -1,7 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { isTerminal } from 'filecheck-node';
 import { z } from 'zod';
-import { READ } from '../annotations.js';
+import { READ, WRITE } from '../annotations.js';
 import type { ToolContext } from '../capabilities.js';
 import { formatJobResult, jsonResult, toolErrorResult } from '../format.js';
 import { jobOutputShape } from '../schemas.js';
@@ -104,12 +104,8 @@ export function registerJobTools(server: McpServer, { client }: ToolContext): vo
         jobId: z.string(),
         taskIds: z.array(z.string()).optional(),
       },
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: true,
-        idempotentHint: true,
-        openWorldHint: true,
-      },
+      // Deleting a job never leaves Filecheck: not open world.
+      annotations: { ...WRITE, idempotentHint: true },
     },
     async (args) => {
       try {
