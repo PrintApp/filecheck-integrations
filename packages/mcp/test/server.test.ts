@@ -80,6 +80,7 @@ describe('createFilecheckMcp registration', () => {
     expect(byName.get('get_job')?.annotations?.readOnlyHint).toBe(true);
     expect(byName.get('list_catalog')?.annotations?.readOnlyHint).toBe(true);
     expect(byName.get('delete_job')?.annotations?.destructiveHint).toBe(true);
+    expect(byName.get('delete_job')?.annotations?.openWorldHint).toBe(false);
     expect(byName.get('check_file')?.annotations?.readOnlyHint).toBe(false);
     expect(byName.get('manage_catalog')?.annotations?.destructiveHint).toBe(true);
     expect(byName.get('test_destination')?.annotations?.openWorldHint).toBe(true);
