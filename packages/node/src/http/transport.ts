@@ -5,7 +5,7 @@
  */
 
 export interface HttpRequest {
-  method: 'GET' | 'POST' | 'DELETE';
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   url: string;
   headers: Record<string, string>;
   /** JSON string, multipart form data, or nothing. */

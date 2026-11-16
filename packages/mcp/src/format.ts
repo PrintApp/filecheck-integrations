@@ -227,15 +227,27 @@ export function toolErrorResult(error: unknown): ToolResult {
   return { content: [{ type: 'text', text: errorText(error) }], isError: true };
 }
 
+/** The API's machine-readable parts: `code`, the field at fault (`param`), every problem (`details`). */
+function apiDetails(error: FilecheckError): string {
+  const body = error.body as { code?: unknown; param?: unknown; details?: unknown } | undefined;
+  if (!body || typeof body !== 'object') return '';
+  const parts = [
+    typeof body.code === 'string' ? `code: ${body.code}` : null,
+    typeof body.param === 'string' ? `field: ${body.param}` : null,
+    body.details !== undefined ? `details: ${JSON.stringify(body.details).slice(0, 8_000)}` : null,
+  ].filter(Boolean);
+  return parts.length ? `\n${parts.join('\n')}` : '';
+}
+
 function errorText(error: unknown): string {
   if (error instanceof AuthenticationError) {
     if (error.status === 403) {
       return `Forbidden: ${error.message}. A 403 usually means the fileRef was uploaded with a different API key — re-upload the file with this key and use the new fileRef.`;
     }
-    return `Authentication failed: ${error.message}. Check the API key (FILECHECK_API_KEY for the local server, the Authorization header for the remote one) — it must be an active sk_… secret key.`;
+    return `Authentication failed: ${error.message}. Check the API key (FILECHECK_API_KEY for the local server, the Authorization header for the remote one) — it must be an active sk_… secret key. A connected app (ChatGPT, Claude) signs in again when the key it was approved with was revoked.`;
   }
   if (error instanceof InvalidRequestError) {
-    return `Invalid request: ${error.message}`;
+    return `Invalid request: ${error.message}${apiDetails(error)}`;
   }
   if (error instanceof NotFoundError) {
     return `Not found: ${error.message}. Check the id — jobs are also soft-deleted by delete_job and expire per retention.`;
@@ -250,7 +262,7 @@ function errorText(error: unknown): string {
     if (error.status === 402) {
       return `Submissions are paused for this account (billing): ${error.message}. Top up credit in the Filecheck dashboard, then retry.`;
     }
-    return `Filecheck API error${error.status ? ` (${error.status})` : ''}: ${error.message}`;
+    return `Filecheck API error${error.status ? ` (${error.status})` : ''}: ${error.message}${apiDetails(error)}`;
   }
   return error instanceof Error ? error.message : String(error);
 }

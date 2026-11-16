@@ -17,7 +17,8 @@
     "changeset": "changeset",
     "version": "changeset version && biome check --write .",
     "release": "pnpm build && changeset publish",
-    "sync:types": "node scripts/sync-element-types.mjs"
+    "sync:types": "node scripts/sync-element-types.mjs",
+    "sync:schemas": "node scripts/sync-api-schemas.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

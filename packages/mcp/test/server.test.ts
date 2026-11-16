@@ -14,6 +14,19 @@ const LOCAL_TOOLS = [
   'list_catalog',
   'get_report',
   'save_artifact',
+  'setup_reference',
+  'manage_catalog',
+  'list_destinations',
+  'manage_destination',
+  'test_destination',
+  'list_product_maps',
+  'find_store_products',
+  'map_product',
+  'get_settings',
+  'update_settings',
+  'list_webhooks',
+  'manage_webhook',
+  'test_webhook',
 ];
 
 describe('createFilecheckMcp registration', () => {
@@ -56,6 +69,20 @@ describe('createFilecheckMcp registration', () => {
     expect(byName.get('list_catalog')?.annotations?.readOnlyHint).toBe(true);
     expect(byName.get('delete_job')?.annotations?.destructiveHint).toBe(true);
     expect(byName.get('check_file')?.annotations?.readOnlyHint).toBe(false);
+    expect(byName.get('manage_catalog')?.annotations?.destructiveHint).toBe(true);
+    expect(byName.get('test_destination')?.annotations?.openWorldHint).toBe(true);
+    await harness.close();
+  });
+
+  // OpenAI's directory scan flags any tool that leaves a hint out.
+  it('sets readOnlyHint, destructiveHint and openWorldHint on every tool', async () => {
+    const harness = await connectHarness([], LOCAL_CAPABILITIES);
+    const { tools } = await harness.mcp.listTools();
+    for (const tool of tools) {
+      for (const hint of ['readOnlyHint', 'destructiveHint', 'openWorldHint'] as const) {
+        expect(typeof tool.annotations?.[hint], `${tool.name}.${hint}`).toBe('boolean');
+      }
+    }
     await harness.close();
   });
 });

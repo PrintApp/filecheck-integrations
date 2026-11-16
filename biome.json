@@ -7,7 +7,8 @@
       "**/node_modules/**",
       "filecheck-php/**",
       "fixtures/**",
-      ".changeset/**"
+      ".changeset/**",
+      "packages/mcp/src/api-schemas/**"
     ]
   },
   "formatter": {

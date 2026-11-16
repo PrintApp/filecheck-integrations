@@ -3,6 +3,8 @@ import { VERSION } from '../version.js';
 import { withRetries } from './retry.js';
 import type { HttpResponse, HttpTransport } from './transport.js';
 
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
 export interface RequestOptions {
   query?: Record<string, string | number | boolean | undefined>;
   body?: unknown;
@@ -20,11 +22,7 @@ export class Requestor {
     private readonly maxRetries: number,
   ) {}
 
-  async raw(
-    method: 'GET' | 'POST' | 'DELETE',
-    path: string,
-    options: RequestOptions = {},
-  ): Promise<HttpResponse> {
+  async raw(method: HttpMethod, path: string, options: RequestOptions = {}): Promise<HttpResponse> {
     const url = new URL(this.baseUrl + path);
     for (const [key, value] of Object.entries(options.query ?? {})) {
       if (value !== undefined) url.searchParams.set(key, String(value));
@@ -56,7 +54,7 @@ export class Requestor {
 
   /** Request + parse. Throws a typed FilecheckError on any non-2xx. */
   async json<T>(
-    method: 'GET' | 'POST' | 'DELETE',
+    method: HttpMethod,
     path: string,
     options: RequestOptions = {},
   ): Promise<{ status: number; data: T }> {

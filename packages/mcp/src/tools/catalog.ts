@@ -1,6 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { LibraryItem } from 'filecheck-node';
 import { z } from 'zod';
+import { READ } from '../annotations.js';
 import type { ToolContext } from '../capabilities.js';
 import { jsonResult, toolErrorResult } from '../format.js';
 
@@ -10,7 +11,16 @@ type CatalogType = (typeof CATALOG_TYPES)[number];
 /** Listing keeps only the identifying scalars; retrieve returns the full item. */
 function compactItem(item: LibraryItem): Record<string, unknown> {
   const out: Record<string, unknown> = { id: item.id };
-  for (const key of ['title', 'name', 'kind', 'description', 'enabled', 'source']) {
+  for (const key of [
+    'title',
+    'name',
+    'kind',
+    'description',
+    'enabled',
+    'source',
+    'draft',
+    'customized',
+  ]) {
     const value = item[key];
     if (value === null || ['string', 'number', 'boolean'].includes(typeof value)) out[key] = value;
   }
@@ -20,7 +30,10 @@ function compactItem(item: LibraryItem): Record<string, unknown> {
 export function registerListCatalog(server: McpServer, { client }: ToolContext): void {
   const resources: Record<
     CatalogType,
-    { list(): Promise<LibraryItem[]>; retrieve(id: string): Promise<LibraryItem> }
+    {
+      list(options?: { drafts?: boolean }): Promise<LibraryItem[]>;
+      retrieve(id: string): Promise<LibraryItem>;
+    }
   > = {
     profiles: client.profiles,
     rules: client.rules,
@@ -36,10 +49,14 @@ export function registerListCatalog(server: McpServer, { client }: ToolContext):
       description:
         "Browse the tenant's resource catalog: preflight `profiles` (check-sets for check_file/fix_file), intake `rules`, `workflows`, `connectors`, and `optimize-presets` (params objects for optimize_file). " +
         "Profiles carry a `kind` ('pdf' or 'raster') — pick a profile whose kind matches the file being checked, or most checks come back not-applicable. " +
-        "Entries tagged source:'domain' are the tenant's own; source:'store' are Filecheck built-ins. Pass `id` for the full definition of one entry.",
+        "Entries tagged source:'domain' are the tenant's own (customized:true when it is the tenant's copy of a built-in); source:'store' are Filecheck built-ins. Pass `id` for the full definition of one entry, `drafts: true` to include unpublished drafts. Change them with manage_catalog.",
       inputSchema: {
         type: z.enum(CATALOG_TYPES).describe('Which collection to browse.'),
         id: z.string().optional().describe('Fetch one entry in full instead of listing.'),
+        drafts: z
+          .boolean()
+          .optional()
+          .describe('Include unpublished drafts (marked draft:true). Listing only.'),
       },
       outputSchema: {
         type: z.string(),
@@ -49,7 +66,7 @@ export function registerListCatalog(server: McpServer, { client }: ToolContext):
           .describe('Compact listing (no id given).'),
         item: z.object({}).passthrough().optional().describe('Full entry (id given).'),
       },
-      annotations: { readOnlyHint: true, openWorldHint: true },
+      annotations: READ,
     },
     async (args) => {
       try {
@@ -58,7 +75,7 @@ export function registerListCatalog(server: McpServer, { client }: ToolContext):
           const item = await resource.retrieve(args.id);
           return jsonResult({ type: args.type, item }, `${args.type} entry ${args.id}.`);
         }
-        const items = (await resource.list()).map(compactItem);
+        const items = (await resource.list({ drafts: args.drafts })).map(compactItem);
         const kindCounts = new Map<string, number>();
         for (const item of items) {
           if (typeof item.kind === 'string')

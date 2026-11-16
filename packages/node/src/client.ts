@@ -6,6 +6,13 @@ import type { HttpTransport } from './http/transport.js';
 import { JobsResource } from './resources/jobs.js';
 import { LibraryResource } from './resources/library.js';
 import { OrdersResource } from './resources/orders.js';
+import {
+  DestinationsResource,
+  ProductMapsResource,
+  ProductsResource,
+  SettingsResource,
+  WebhooksResource,
+} from './resources/setup.js';
 import { UploadsResource } from './resources/uploads.js';
 import { webhooks } from './webhooks.js';
 
@@ -41,6 +48,12 @@ export class Filecheck {
   readonly rules: LibraryResource;
   readonly profiles: LibraryResource;
   readonly optimizePresets: LibraryResource;
+  readonly destinations: DestinationsResource;
+  readonly productMaps: ProductMapsResource;
+  readonly products: ProductsResource;
+  readonly settings: SettingsResource;
+  /** Webhook endpoints (`/webhooks`). `webhooks` is the signature-verification helper. */
+  readonly webhookEndpoints: WebhooksResource;
   readonly webhooks = webhooks;
 
   constructor(secretKey: string, options: FilecheckClientOptions = {}) {
@@ -54,7 +67,9 @@ export class Filecheck {
         `${maskKey(secretKey)} is a publishable key. Publishable keys are browser-only (for the Element); the server SDK needs your secret key (sk_…) from the Filecheck dashboard.`,
       );
     }
-    if (!secretKey.startsWith('sk_')) {
+    // fat_: an OAuth access token (an app the merchant connected, e.g. ChatGPT),
+    // which acts for the secret key it was approved with.
+    if (!secretKey.startsWith('sk_') && !secretKey.startsWith('fat_')) {
       throw new AuthenticationError('Invalid API key: secret keys start with "sk_"');
     }
 
@@ -73,5 +88,10 @@ export class Filecheck {
     this.rules = new LibraryResource(requestor, '/rules', 'rules', 'rule');
     this.profiles = new LibraryResource(requestor, '/profiles', 'profiles', 'profile');
     this.optimizePresets = new LibraryResource(requestor, '/optimize-presets', 'presets', 'preset');
+    this.destinations = new DestinationsResource(requestor);
+    this.productMaps = new ProductMapsResource(requestor);
+    this.products = new ProductsResource(requestor);
+    this.settings = new SettingsResource(requestor);
+    this.webhookEndpoints = new WebhooksResource(requestor);
   }
 }
