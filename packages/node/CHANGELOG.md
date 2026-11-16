@@ -1,5 +1,11 @@
 # filecheck-node
 
+## 0.3.0
+
+### Minor Changes
+
+- 5be7606: Setup API resources: `workflows`, `rules`, `profiles`, `connectors` and `optimizePresets` gain `create` (drafts, dry runs), `update` (JSON Merge Patch), `del`, `publish` and `revert`; new `destinations` (with `test`), `productMaps`, `products.search`, `settings` and `webhookEndpoints` (with `events` and `test`). `jobs.create` takes `workflowId` and `previewWorkflow`. The client also accepts an OAuth access token (`fat_…`) in place of a secret key.
+
 ## 0.2.0
 
 ### Minor Changes
