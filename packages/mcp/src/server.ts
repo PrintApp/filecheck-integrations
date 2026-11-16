@@ -25,11 +25,11 @@ If a tool returns pending:true, poll get_job with the returned jobId. Never resu
 Typical flow: check_file → (findings autofixable?) fix_file → download/save deliverables. Discover profiles and rules with list_catalog.
 
 Setting up a product (which files it accepts, how they are checked and fixed, where finished files go) — check in with the merchant at each step, in plain words:
-1. The product: find_store_products (Shopify) or ask for its id; list_product_maps shows what is mapped already.
+1. The product: find_store_products and list_product_maps (Shopify). On WooCommerce, PrestaShop and OpenCart the merchant picks a product's workflow in the Filecheck plugin's product settings: there, skip mapping and tell them the workflow's name. A connector is chosen per product in those plugin settings too, never on a workflow.
 2. What exists: list_catalog workflows, rules and profiles. Prefer a built-in (source:'store') one that fits: manage_catalog update on it saves the account's own copy (revert undoes it).
 3. Before writing a record, read its schema with setup_reference. manage_catalog create saves drafts by default; build bottom-up: profile → rule (its accept entries name the profiles) → workflow (intake.ruleId, delivery.destinationIds). dryRun: true validates without saving.
 4. Try the draft on a real file: check_file with workflowId (or ruleId). Fix what the result shows.
-5. Ask before anything customers see: manage_catalog publish (the workflow publishes the drafts it points at), then map_product set, and update_settings.
+5. Ask before anything customers see: manage_catalog publish (the workflow publishes the drafts it points at), then map_product set (Shopify), and update_settings.
 Delivery: manage_destination create, then test_destination — it really writes a sample file into the shop's hotfolder or sends mail, so ask first. Secrets read back as ********.
 Setup errors name the field at fault (param) and list every problem (details): fix those and retry.`;
 
