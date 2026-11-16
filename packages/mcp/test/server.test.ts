@@ -61,6 +61,18 @@ describe('createFilecheckMcp registration', () => {
     await harness.close();
   });
 
+  it('names itself with a title, website and the Filecheck icon', async () => {
+    const harness = await connectHarness([], REMOTE_CAPABILITIES);
+    const info = harness.mcp.getServerVersion();
+    expect(info?.title).toBe('Filecheck');
+    expect(info?.websiteUrl).toBe('https://filecheck.io');
+    expect(info?.icons?.map((icon) => icon.src)).toEqual([
+      'https://api.filecheck.io/favicon.svg',
+      'https://api.filecheck.io/icon.png',
+    ]);
+    await harness.close();
+  });
+
   it('annotates read-only and destructive tools', async () => {
     const harness = await connectHarness([], LOCAL_CAPABILITIES);
     const { tools } = await harness.mcp.listTools();
