@@ -144,6 +144,18 @@ describe('manage_catalog', () => {
 });
 
 describe('products, destinations, settings, webhooks', () => {
+  it('tells agents that mapping is for Shopify; other carts choose in the plugin', async () => {
+    const harness = await connectHarness();
+    const { tools } = await harness.mcp.listTools();
+    const byName = new Map(tools.map((t) => [t.name, t.description ?? '']));
+    for (const name of ['map_product', 'find_store_products']) {
+      expect(byName.get(name)).toMatch(/WooCommerce, PrestaShop and OpenCart/);
+      expect(byName.get(name)).toMatch(/plugin's product settings/);
+    }
+    expect(byName.get('find_store_products')).not.toMatch(/ask the merchant for the product id/);
+    await harness.close();
+  });
+
   it('map_product set needs a workflow; remove unmaps', async () => {
     const harness = await connectHarness([
       ok({ productMap: { productId: '42', workflowId: 'wf_1' } }),

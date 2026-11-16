@@ -295,7 +295,7 @@ export function registerSetupTools(server: McpServer, { client }: ToolContext): 
     {
       title: 'List product mappings',
       description:
-        "Every product in the merchant's store that opens a workflow, and which. The storefront Element runs that workflow on the product page.",
+        "Every product in the merchant's Shopify store that opens a workflow, and which. The storefront Element runs that workflow on the product page.",
       inputSchema: {},
       annotations: { title: 'List product mappings', ...READ },
     },
@@ -314,7 +314,7 @@ export function registerSetupTools(server: McpServer, { client }: ToolContext): 
     {
       title: "Find the store's products",
       description:
-        "Reads products from the merchant's connected Shopify store, each with the workflow it is mapped to. Other carts answer cart_not_supported: ask the merchant for the product id instead.",
+        "Reads products from the merchant's connected Shopify store, each with the workflow it is mapped to. Other carts answer cart_not_supported: on WooCommerce, PrestaShop and OpenCart the merchant picks a product's workflow in the Filecheck plugin's product settings, so tell them which workflow to pick there instead of mapping it.",
       inputSchema: {
         search: z
           .string()
@@ -342,7 +342,7 @@ export function registerSetupTools(server: McpServer, { client }: ToolContext): 
     {
       title: 'Map a product to a workflow',
       description:
-        "set: the product opens this workflow on its page from now on (customers see it at once: ask first). The workflow must be published. remove: the product stops opening a workflow. Read setup_reference product-map for the record's other fields.",
+        "Shopify stores only: on WooCommerce, PrestaShop and OpenCart the merchant picks a product's workflow in the Filecheck plugin's product settings, and a mapping has no effect there, so tell the merchant which workflow to pick instead. set: the product opens this workflow on its page from now on (customers see it at once: ask first). The workflow must be published. remove: the product stops opening a workflow. Read setup_reference product-map for the record's other fields.",
       inputSchema: {
         action: z.enum(['set', 'remove']),
         productId: z.string().describe("The product's id in the store (Shopify: the numeric id)."),
