@@ -46,7 +46,17 @@ export interface CreateFilecheckMcpOptions {
  */
 export function createFilecheckMcp({ client, capabilities }: CreateFilecheckMcpOptions): McpServer {
   const server = new McpServer(
-    { name: 'filecheck', version: VERSION },
+    {
+      name: 'filecheck',
+      title: 'Filecheck',
+      version: VERSION,
+      websiteUrl: 'https://filecheck.io',
+      // The Filecheck mark, served on the remote server's own host (fc-oauth).
+      icons: [
+        { src: 'https://api.filecheck.io/favicon.svg', mimeType: 'image/svg+xml', sizes: ['any'] },
+        { src: 'https://api.filecheck.io/icon.png', mimeType: 'image/png', sizes: ['512x512'] },
+      ],
+    },
     { instructions: INSTRUCTIONS },
   );
   const ctx: ToolContext = { client, caps: capabilities };
