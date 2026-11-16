@@ -1,5 +1,11 @@
 # filecheck-mcp
 
+## 0.3.1
+
+### Patch Changes
+
+- d4e2de0: The server names itself with a title (`Filecheck`), its website and the Filecheck icon in its server info, so clients and directories show the current mark.
+
 ## 0.3.0
 
 ### Minor Changes
