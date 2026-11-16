@@ -1,5 +1,11 @@
 # filecheck-mcp
 
+## 0.3.2
+
+### Patch Changes
+
+- 4aef9db: `delete_job` declares `openWorldHint: false`: deleting a job never reaches a system outside Filecheck.
+
 ## 0.3.1
 
 ### Patch Changes
