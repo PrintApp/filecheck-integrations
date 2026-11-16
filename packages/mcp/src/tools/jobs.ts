@@ -1,6 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { isTerminal } from 'filecheck-node';
 import { z } from 'zod';
+import { READ } from '../annotations.js';
 import type { ToolContext } from '../capabilities.js';
 import { formatJobResult, jsonResult, toolErrorResult } from '../format.js';
 import { jobOutputShape } from '../schemas.js';
@@ -18,7 +19,7 @@ export function registerJobTools(server: McpServer, { client }: ToolContext): vo
         jobId: z.string().describe('The job_… id returned by a submit tool.'),
       },
       outputSchema: jobOutputShape,
-      annotations: { readOnlyHint: true, openWorldHint: true },
+      annotations: READ,
     },
     async (args) => {
       try {
@@ -59,7 +60,7 @@ export function registerJobTools(server: McpServer, { client }: ToolContext): vo
           .optional()
           .describe('Pass back to fetch the next page; absent on the last page.'),
       },
-      annotations: { readOnlyHint: true, openWorldHint: true },
+      annotations: READ,
     },
     async (args) => {
       try {

@@ -58,10 +58,18 @@ export interface JobContext {
   safety?: { min_mm?: number };
 }
 
-/** `POST /jobs`. NOTE: `workflowId` is not accepted — it is response-only. */
+/** `POST /jobs`. */
 export interface CreateJobParams {
   sources: CreateJobSource[];
   ruleId?: string;
+  /**
+   * Run the files through a workflow's intake (`wf_…`), as the storefront does
+   * for a product mapped to it: its rule replaces `ruleId` and `sources[].steps`.
+   * Drafts work too, so a workflow can be tried before it is published.
+   */
+  workflowId?: string;
+  /** An unsaved workflow record to run the files through (kept a day, then discarded). */
+  previewWorkflow?: Record<string, unknown>;
   channel?: 'api' | 'store' | 'admin';
   customerId?: string;
   orderId?: string;

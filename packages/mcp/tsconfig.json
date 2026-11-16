@@ -3,7 +3,8 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022"],
-    "types": ["node"]
+    "types": ["node"],
+    "resolveJsonModule": true
   },
   "include": ["src", "test", "tsup.config.ts", "vitest.config.ts"]
 }

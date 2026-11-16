@@ -1,6 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { PreflightResult } from 'filecheck-node';
 import { z } from 'zod';
+import { READ } from '../annotations.js';
 import type { ToolContext } from '../capabilities.js';
 import { jsonResult, toolErrorResult } from '../format.js';
 
@@ -60,7 +61,7 @@ export function registerGetReport(server: McpServer, { client }: ToolContext): v
         offset: z.number().optional(),
         returned: z.number().optional(),
       },
-      annotations: { readOnlyHint: true, openWorldHint: true },
+      annotations: READ,
     },
     async (args) => {
       try {

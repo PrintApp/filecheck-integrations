@@ -71,6 +71,28 @@ export type {
 } from './types/params.js';
 
 export type { UploadInput, UploadOptions, UploadResult } from './resources/uploads.js';
-export type { LibraryItem } from './resources/library.js';
+export type { LibraryResource, RecordResource } from './resources/library.js';
+export type {
+  DestinationsResource,
+  WebhooksResource,
+  ProductMapsResource,
+  ProductsResource,
+  SettingsResource,
+} from './resources/setup.js';
+export type {
+  LibraryItem,
+  WriteResult,
+  PublishResult,
+  RevertResult,
+  DeletedRecord,
+  CreateOptions,
+  UpdateOptions,
+} from './resources/library.js';
+export type {
+  SetupRecord,
+  TestResult,
+  ProductMap,
+  StoreProductPage,
+} from './resources/setup.js';
 export type { HttpTransport, HttpRequest, HttpResponse } from './http/transport.js';
 export type { FetchLike } from './http/fetch.js';

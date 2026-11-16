@@ -1,5 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
+import { PROCESS } from '../annotations.js';
 import type { ToolContext } from '../capabilities.js';
 import { formatJobResult, toolErrorResult } from '../format.js';
 import { resolveSource } from '../resolve-source.js';
@@ -15,6 +16,7 @@ export function registerCheckFile(server: McpServer, { client, caps }: ToolConte
         'Check a file for print-readiness against a preflight profile. Returns a verdict with findings and a recommended autofix. ' +
         'READ THE TWO AXES: `status` is execution (done/error), `outcome` is the verdict — status:done + outcome:fail means the check completed and the file is NOT print-ready; do not treat done as success. ' +
         'Pass `context` whenever the ordered product dimensions are known. Omitting `profileId` runs every supported check but returns raw findings with no pass/fail verdict. ' +
+        'To try a workflow or rule (drafts included) on a real file before publishing it, pass its `workflowId` or `ruleId`. ' +
         'If the result is pending, poll get_job — never resubmit.',
       inputSchema: {
         source: makeSourceSchema(caps),
@@ -30,16 +32,17 @@ export function registerCheckFile(server: McpServer, { client, caps }: ToolConte
           .describe(
             "Intake rule id (list_catalog type 'rules'). When set, the rule's flow decides steps and profile per file type; profileId is then a fallback hint only.",
           ),
+        workflowId: z
+          .string()
+          .optional()
+          .describe(
+            "Workflow id (wf_…, list_catalog type 'workflows'): run the file through its intake, exactly as the storefront does for a product mapped to it. Drafts work too. Wins over ruleId.",
+          ),
         context: contextSchema.optional(),
         waitSeconds: waitSecondsSchema,
       },
       outputSchema: jobOutputShape,
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-        idempotentHint: false,
-        openWorldHint: true,
-      },
+      annotations: PROCESS,
     },
     async (args) => {
       try {
@@ -48,7 +51,7 @@ export function registerCheckFile(server: McpServer, { client, caps }: ToolConte
           client,
           caps,
           (wait) =>
-            args.ruleId
+            args.ruleId || args.workflowId
               ? client.jobs.create({
                   // POST /jobs requires steps per source; the rule overrides them.
                   sources: [
@@ -62,7 +65,7 @@ export function registerCheckFile(server: McpServer, { client, caps }: ToolConte
                       ],
                     },
                   ],
-                  ruleId: args.ruleId,
+                  ...(args.workflowId ? { workflowId: args.workflowId } : { ruleId: args.ruleId }),
                   ...(args.context ? { context: args.context } : {}),
                   ...wait,
                 })
