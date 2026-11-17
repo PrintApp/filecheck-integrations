@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { REMOTE_CAPABILITIES } from '../src/capabilities.js';
 import { FULL_LIMIT, SCHEMAS } from '../src/schema-reference.js';
 import { call, connectHarness } from './helpers/mcp-client.js';
 
@@ -140,6 +141,68 @@ describe('manage_catalog', () => {
     expect(result.text).toContain('field: accept[0].profileId');
     expect(result.text).toContain('/title');
     await harness.close();
+  });
+});
+
+describe('credentials on the hosted server', () => {
+  const sftp = (params: Record<string, unknown>) => ({
+    kind: 'sftp',
+    title: 'Hotfolder',
+    params: { host: 'sftp.example.com', username: 'prepress', path: '/in', ...params },
+  });
+
+  it('refuses destination passwords and keys, before calling the API', async () => {
+    const harness = await connectHarness([], REMOTE_CAPABILITIES);
+    const result = await call(harness.mcp, 'manage_destination', {
+      action: 'create',
+      record: sftp({ password: 'hunter2', privateKey: '-----BEGIN…' }),
+    });
+    expect(result.isError).toBe(true);
+    expect(result.text).toContain('params.password, params.privateKey');
+    expect(result.text).toContain('Library → Destinations');
+    expect(result.text).not.toContain('hunter2');
+    expect(harness.requests).toHaveLength(0);
+    await harness.close();
+  });
+
+  it('saves a destination without secrets, and keeps a masked one as it is', async () => {
+    const harness = await connectHarness(
+      [
+        { status: 201, body: JSON.stringify({ destination: { id: 'dst_1' } }) },
+        { status: 200, body: JSON.stringify({ destination: { id: 'dst_1' } }) },
+      ],
+      REMOTE_CAPABILITIES,
+    );
+    expect(
+      (await call(harness.mcp, 'manage_destination', { action: 'create', record: sftp({}) }))
+        .isError,
+    ).toBe(false);
+    const masked = await call(harness.mcp, 'manage_destination', {
+      action: 'update',
+      id: 'dst_1',
+      record: { params: { password: '********', path: '/in/cards' } },
+    });
+    expect(masked.isError).toBe(false);
+    expect(harness.requests).toHaveLength(2);
+    await harness.close();
+  });
+
+  it('tells the agent where secrets go, and the local server still takes them', async () => {
+    const remote = await connectHarness([], REMOTE_CAPABILITIES);
+    const tool = (await remote.mcp.listTools()).tools.find((t) => t.name === 'manage_destination');
+    expect(tool?.description).toContain('Never ask for them in the chat');
+    await remote.close();
+
+    const local = await connectHarness([
+      { status: 201, body: JSON.stringify({ destination: { id: 'dst_2' } }) },
+    ]);
+    const ok = await call(local.mcp, 'manage_destination', {
+      action: 'create',
+      record: sftp({ password: 'hunter2' }),
+    });
+    expect(ok.isError).toBe(false);
+    expect(JSON.parse(local.requests[0]!.body as string).params.password).toBe('hunter2');
+    await local.close();
   });
 });
 

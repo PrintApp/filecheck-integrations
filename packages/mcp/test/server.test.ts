@@ -47,6 +47,8 @@ describe('createFilecheckMcp registration', () => {
     const check = tools.find((t) => t.name === 'check_file');
     const source = (check?.inputSchema as any).properties.source;
     expect(Object.keys(source.properties)).not.toContain('filePath');
+    // no credentials as tool arguments on the hosted server
+    expect(Object.keys(source.properties)).not.toContain('headers');
     expect(source.description).toContain('npx filecheck-mcp');
     await harness.close();
   });
