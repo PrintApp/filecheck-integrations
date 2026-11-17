@@ -2,7 +2,7 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { Filecheck } from 'filecheck-node';
 import type { FetchLike } from 'filecheck-node';
-import type { Capabilities } from '../../src/capabilities.js';
+import type { Capabilities, LinkRewriter } from '../../src/capabilities.js';
 import { LOCAL_CAPABILITIES } from '../../src/capabilities.js';
 import { createFilecheckMcp } from '../../src/server.js';
 import type { QueuedResponse } from './mock-fetch.js';
@@ -23,10 +23,11 @@ export interface ConnectedHarness {
 export async function connectHarness(
   queue: QueuedResponse[] = [],
   caps: Capabilities = LOCAL_CAPABILITIES,
+  links?: LinkRewriter,
 ): Promise<ConnectedHarness> {
   const { mockFetch, requests, push } = createMockFetch(...queue);
   const client = new Filecheck('sk_test_mcp', { fetch: mockFetch as FetchLike, maxRetries: 0 });
-  const server = createFilecheckMcp({ client, capabilities: caps });
+  const server = createFilecheckMcp({ client, capabilities: caps, ...(links ? { links } : {}) });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   const mcp = new Client({ name: 'harness', version: '0.0.0' });
   await Promise.all([server.connect(serverTransport), mcp.connect(clientTransport)]);

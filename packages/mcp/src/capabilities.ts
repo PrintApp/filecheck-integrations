@@ -42,8 +42,22 @@ export const REMOTE_CAPABILITIES: Capabilities = {
   credentialArgs: false,
 };
 
+/**
+ * Rewrites download links in tool results. The hosted server sets this so
+ * presigned S3 URLs (which break when a chat app appends ?utm_source=…, since
+ * S3 signs the whole query string) become links on the host's own domain that
+ * redirect to a fresh presigned URL. Unset: links are returned as the API gave them.
+ */
+export interface LinkRewriter {
+  /** A URL → the URL to hand out (return it unchanged when it isn't one to rewrite). */
+  rewrite: (url: string) => string;
+  /** How long a rewritten link stays valid, in seconds. */
+  ttlSeconds: number;
+}
+
 /** Passed to every tool's register function. */
 export interface ToolContext {
   client: Filecheck;
   caps: Capabilities;
+  links?: LinkRewriter;
 }

@@ -6,7 +6,7 @@ import type { ToolContext } from '../capabilities.js';
 import { formatJobResult, jsonResult, toolErrorResult } from '../format.js';
 import { jobOutputShape } from '../schemas.js';
 
-export function registerJobTools(server: McpServer, { client }: ToolContext): void {
+export function registerJobTools(server: McpServer, { client, links }: ToolContext): void {
   server.registerTool(
     'get_job',
     {
@@ -24,7 +24,7 @@ export function registerJobTools(server: McpServer, { client }: ToolContext): vo
     async (args) => {
       try {
         const job = await client.jobs.retrieve(args.jobId);
-        return formatJobResult({ job, pending: !isTerminal(job) });
+        return formatJobResult({ job, pending: !isTerminal(job) }, links);
       } catch (error) {
         return toolErrorResult(error);
       }

@@ -7,6 +7,7 @@ import {
   RateLimitError,
 } from 'filecheck-node';
 import type { Artifact, Job, PreflightResult } from 'filecheck-node';
+import type { LinkRewriter } from './capabilities.js';
 import type { RunOutcome } from './run-job.js';
 
 /** Findings cap across all files of a job — the rest lives behind get_report. */
@@ -97,7 +98,37 @@ export function verdictText(job: Job, pending: boolean): string {
  * summaries, capped findings, and the (signed) deliverables. The raw report
  * never rides along — that's get_report territory.
  */
-export function formatJobResult(run: RunOutcome): ToolResult {
+/** Every URL string in a result, through the rewriter; expiresIn follows rewritten links. */
+function rewriteLinks(value: unknown, links: LinkRewriter): unknown {
+  if (typeof value === 'string') return /^https:\/\//.test(value) ? links.rewrite(value) : value;
+  if (Array.isArray(value)) return value.map((item) => rewriteLinks(item, links));
+  if (value && typeof value === 'object') {
+    const out: Record<string, unknown> = {};
+    for (const [key, item] of Object.entries(value)) out[key] = rewriteLinks(item, links);
+    const before = (value as Record<string, unknown>).downloadUrl;
+    if (typeof before === 'string' && out.downloadUrl !== before && 'expiresIn' in out) {
+      out.expiresIn = links.ttlSeconds;
+    }
+    return out;
+  }
+  return value;
+}
+
+const ttlText = (seconds: number) =>
+  seconds >= 86_400
+    ? `${Math.round(seconds / 86_400)} days`
+    : `${Math.round(seconds / 3600)} hours`;
+
+export function formatJobResult(run: RunOutcome, links?: LinkRewriter): ToolResult {
+  const result = formatJobResultRaw(run, links);
+  if (!links || !result.structuredContent) return result;
+  return {
+    ...result,
+    structuredContent: rewriteLinks(result.structuredContent, links) as Record<string, unknown>,
+  };
+}
+
+function formatJobResultRaw(run: RunOutcome, links?: LinkRewriter): ToolResult {
   const { job, pending } = run;
   const verdict = verdictText(job, pending);
   const structured: Record<string, unknown> = {
@@ -212,7 +243,9 @@ export function formatJobResult(run: RunOutcome): ToolResult {
   if (job.deliverables.length > 0) {
     structured.deliverables = job.deliverables.map(compactArtifact);
     notes.push(
-      `${job.deliverables.length} deliverable(s); download URLs expire in ~60 minutes — re-call get_job for fresh ones.`,
+      links
+        ? `${job.deliverables.length} deliverable(s); download links last ${ttlText(links.ttlSeconds)} — call get_job again after that for new ones.`
+        : `${job.deliverables.length} deliverable(s); download URLs expire in ~60 minutes — re-call get_job for fresh ones.`,
     );
   }
 

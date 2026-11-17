@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { Filecheck } from 'filecheck-node';
-import type { Capabilities, ToolContext } from './capabilities.js';
+import type { Capabilities, LinkRewriter, ToolContext } from './capabilities.js';
 import { registerSaveArtifact } from './tools/artifact.js';
 import { registerListCatalog } from './tools/catalog.js';
 import { registerCheckFile } from './tools/check.js';
@@ -38,13 +38,19 @@ export interface CreateFilecheckMcpOptions {
   client: Filecheck;
   /** What the hosting process can do; shapes which tools and fields exist. */
   capabilities: Capabilities;
+  /** Optional: rewrite download links in results (the hosted server's short links). */
+  links?: LinkRewriter;
 }
 
 /**
  * Build the Filecheck MCP server. Transport-agnostic: the stdio CLI and the
  * remote Streamable HTTP Lambda both consume this factory.
  */
-export function createFilecheckMcp({ client, capabilities }: CreateFilecheckMcpOptions): McpServer {
+export function createFilecheckMcp({
+  client,
+  capabilities,
+  links,
+}: CreateFilecheckMcpOptions): McpServer {
   const server = new McpServer(
     {
       name: 'filecheck',
@@ -59,7 +65,7 @@ export function createFilecheckMcp({ client, capabilities }: CreateFilecheckMcpO
     },
     { instructions: INSTRUCTIONS },
   );
-  const ctx: ToolContext = { client, caps: capabilities };
+  const ctx: ToolContext = { client, caps: capabilities, ...(links ? { links } : {}) };
 
   registerCheckFile(server, ctx);
   registerFixFile(server, ctx);

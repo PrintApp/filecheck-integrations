@@ -6,7 +6,7 @@ import { resolveSource } from '../resolve-source.js';
 import { submitAndWait } from '../run-job.js';
 import { contextSchema, jobOutputShape, makeSourceSchema, waitSecondsSchema } from '../schemas.js';
 
-export function registerFixFile(server: McpServer, { client, caps }: ToolContext): void {
+export function registerFixFile(server: McpServer, { client, caps, links }: ToolContext): void {
   server.registerTool(
     'fix_file',
     {
@@ -53,7 +53,7 @@ export function registerFixFile(server: McpServer, { client, caps }: ToolContext
             }),
           args.waitSeconds,
         );
-        return formatJobResult(run);
+        return formatJobResult(run, links);
       } catch (error) {
         return toolErrorResult(error);
       }
