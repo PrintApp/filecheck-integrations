@@ -67,7 +67,9 @@ export async function resolveSource(
   if (source.url) {
     return {
       url: source.url,
-      ...(source.headers ? { headers: source.headers } : {}),
+      // Only where tools may take credentials (the local CLI): the hosted
+      // server's schema has no `headers`, and stray ones are not forwarded.
+      ...(source.headers && caps.credentialArgs ? { headers: source.headers } : {}),
       ...(source.name ? { name: source.name } : {}),
     };
   }

@@ -27,9 +27,9 @@ describe('resolveSource', () => {
     ).rejects.toThrow(/url \+ fileRef/);
   });
 
-  it('passes url sources through with headers', async () => {
+  it('passes url sources through with headers on the local server', async () => {
     const { client, create } = stubUploads();
-    const ref = await resolveSource(client, REMOTE_CAPABILITIES, {
+    const ref = await resolveSource(client, LOCAL_CAPABILITIES, {
       url: 'https://example.com/a.pdf',
       headers: { Authorization: 'Bearer t' },
     });
@@ -38,6 +38,15 @@ describe('resolveSource', () => {
       headers: { Authorization: 'Bearer t' },
     });
     expect(create).not.toHaveBeenCalled();
+  });
+
+  it('never forwards headers from the hosted server', async () => {
+    const { client } = stubUploads();
+    const ref = await resolveSource(client, REMOTE_CAPABILITIES, {
+      url: 'https://example.com/a.pdf',
+      headers: { Authorization: 'Bearer t' },
+    });
+    expect(ref).toEqual({ url: 'https://example.com/a.pdf' });
   });
 
   it('uploads a filePath and returns the fileRef', async () => {

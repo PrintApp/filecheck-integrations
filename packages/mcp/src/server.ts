@@ -30,7 +30,7 @@ Setting up a product (which files it accepts, how they are checked and fixed, wh
 3. Before writing a record, read its schema with setup_reference. manage_catalog create saves drafts by default; build bottom-up: profile → rule (its accept entries name the profiles) → workflow (intake.ruleId, delivery.destinationIds). dryRun: true validates without saving.
 4. Try the draft on a real file: check_file with workflowId (or ruleId). Fix what the result shows.
 5. Ask before anything customers see: manage_catalog publish (the workflow publishes the drafts it points at), then map_product set (Shopify), and update_settings.
-Delivery: manage_destination create, then test_destination — it really writes a sample file into the shop's hotfolder or sends mail, so ask first. Secrets read back as ********.
+Delivery: manage_destination create, then test_destination — it really writes a sample file into the shop's hotfolder or sends mail, so ask first. Secrets read back as ********. Never ask for passwords, private keys or tokens in the chat: the merchant adds them in the Filecheck dashboard (Library → Destinations).
 Setup errors name the field at fault (param) and list every problem (details): fix those and retry.`;
 
 export interface CreateFilecheckMcpOptions {

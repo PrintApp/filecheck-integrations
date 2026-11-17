@@ -25,18 +25,24 @@ export function makeSourceSchema(caps: Capabilities) {
       .string()
       .regex(/^https?:\/\//, 'must be an http(s) URL')
       .optional()
-      .describe('Public (or header-authenticated) URL to fetch the file from.'),
+      .describe(
+        caps.credentialArgs
+          ? 'Public (or header-authenticated) URL to fetch the file from.'
+          : 'Public URL to fetch the file from, such as a shared Dropbox or Google Drive link that downloads it.',
+      ),
     fileRef: z
       .string()
       .regex(/^upload_/, 'must start with "upload_"')
       .optional()
       .describe('An `upload_…` reference from a previous upload with this same API key.'),
-    headers: z
-      .record(z.string())
-      .optional()
-      .describe('Extra HTTP headers sent when fetching `url` (e.g. Authorization).'),
     name: z.string().optional().describe('Original filename hint.'),
   };
+  if (caps.credentialArgs) {
+    shape.headers = z
+      .record(z.string())
+      .optional()
+      .describe('Extra HTTP headers sent when fetching `url` (e.g. Authorization).');
+  }
   if (caps.localFiles) {
     shape.filePath = z
       .string()

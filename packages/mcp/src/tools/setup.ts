@@ -67,7 +67,25 @@ const idOf = (value: unknown): string | undefined =>
     ? (value as { id: string }).id
     : undefined;
 
-export function registerSetupTools(server: McpServer, { client }: ToolContext): void {
+/** Destination params that are credentials (write-only; read back as ********). */
+const DESTINATION_SECRETS = ['password', 'privateKey', 'passphrase', 'headerValue'];
+const MASK = '********';
+
+/** Secret params set to a real value (the mask keeps the stored one, so it is fine). */
+function secretsIn(record: Record<string, unknown> | undefined): string[] {
+  const params = record?.params;
+  if (!params || typeof params !== 'object') return [];
+  return DESTINATION_SECRETS.filter((key) => {
+    const value = (params as Record<string, unknown>)[key];
+    return value !== undefined && value !== null && value !== MASK;
+  });
+}
+
+export function registerSetupTools(server: McpServer, { client, caps }: ToolContext): void {
+  const destinationSecretsNote = caps.credentialArgs
+    ? 'Secrets (passwords, private keys, header values) are write-only: send them only when setting or changing them.'
+    : 'Passwords, private keys and header values are never sent through this tool: create the destination without them, then the merchant adds them in the Filecheck dashboard (Library → Destinations). Never ask for them in the chat.';
+
   // ---- schemas ------------------------------------------------------------
 
   server.registerTool(
@@ -222,8 +240,7 @@ export function registerSetupTools(server: McpServer, { client }: ToolContext): 
     'manage_destination',
     {
       title: 'Create or change a delivery destination',
-      description:
-        'Create, update (merge patch) or delete a delivery destination. Read setup_reference destination first: `kind` picks the transport and `params` its settings. Secrets (passwords, private keys, header values) are write-only: send them only when setting or changing them; a merchant who would rather not share one in the chat can create the destination without it and add it in the Filecheck dashboard. After creating, test_destination checks the connection. delete is refused (in_use) while a published workflow delivers to it.',
+      description: `Create, update (merge patch) or delete a delivery destination. Read setup_reference destination first: \`kind\` picks the transport and \`params\` its settings. ${destinationSecretsNote} After creating, test_destination checks the connection. delete is refused (in_use) while a published workflow delivers to it.`,
       inputSchema: {
         action: z.enum(['create', 'update', 'delete']),
         id: z.string().optional().describe('The destination id (update, delete).'),
@@ -235,6 +252,12 @@ export function registerSetupTools(server: McpServer, { client }: ToolContext): 
     async (args) => {
       try {
         const base = { action: args.action };
+        const secrets = caps.credentialArgs ? [] : secretsIn(args.record);
+        if (secrets.length) {
+          throw new ToolInputError(
+            `This connection doesn't take passwords, private keys or header values (${secrets.map((k) => `params.${k}`).join(', ')}). Save the destination without them, then the merchant adds them in the Filecheck dashboard under Library → Destinations. Don't ask for them in the chat.`,
+          );
+        }
         if (args.action === 'create') {
           need(args, ['record'], 'create');
           const result = await client.destinations.create(args.record!, { dryRun: args.dryRun });
