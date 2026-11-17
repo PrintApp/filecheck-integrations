@@ -36,6 +36,7 @@ export type {
   Step,
   Task,
   JobSummary,
+  FailedSource,
   ValidateResult,
   ValidateProfileResult,
   PreflightResult,

@@ -118,6 +118,18 @@ export interface JobSummary {
   sourceRefs: Array<{ taskId: string | null; bucket: string; key: string }>;
   created: number | null;
   finalized: string;
+  /** Set when the job errored before any file could be processed (e.g. every source failed). */
+  error?: string;
+  /** Each source that could not be collated, and why. */
+  failedSources?: FailedSource[];
+}
+
+/** A source the API could not turn into a task (unreachable or refused URL, missing upload). */
+export interface FailedSource {
+  index: number;
+  source: string | null;
+  fileRef: string | null;
+  error: string;
 }
 
 interface ResultHeader {
