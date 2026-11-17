@@ -6,7 +6,7 @@ import {
   NotFoundError,
   RateLimitError,
 } from 'filecheck-node';
-import type { Artifact, Job, PreflightResult } from 'filecheck-node';
+import type { Artifact, FailedSource, Job, PreflightResult } from 'filecheck-node';
 import type { LinkRewriter } from './capabilities.js';
 import type { RunOutcome } from './run-job.js';
 
@@ -128,9 +128,30 @@ export function formatJobResult(run: RunOutcome, links?: LinkRewriter): ToolResu
   };
 }
 
+/**
+ * Why a job errored before any file was processed, in words a chat can act on.
+ * The API records it on job.summary (error, failedSources) when every source failed.
+ */
+function failureOf(
+  job: Job,
+): { reason: string; nextStep: string; failedSources: FailedSource[] } | null {
+  const summary = job.summary;
+  if (job.status !== 'error' || !summary?.error) return null;
+  const failedSources = summary.failedSources ?? [];
+  const reasons = failedSources.map((f) => f.error).join(' ');
+  const nextStep =
+    /URL not allowed|fetch \d{3}|host not found|ENOTFOUND|timed? ?out|fetch failed/i.test(reasons)
+      ? 'Filecheck could not download the file from that link. Ask for a public link that downloads the file directly (for example a shared Dropbox or Google Drive link), then check it again. Links to private or internal addresses are never fetched.'
+      : 'Ask the user to check the file or link, then submit it again.';
+  return { reason: summary.error, nextStep, failedSources };
+}
+
 function formatJobResultRaw(run: RunOutcome, links?: LinkRewriter): ToolResult {
   const { job, pending } = run;
-  const verdict = verdictText(job, pending);
+  const failure = pending ? null : failureOf(job);
+  const verdict = failure
+    ? `${verdictText(job, pending)} Reason: ${failure.reason}`
+    : verdictText(job, pending);
   const structured: Record<string, unknown> = {
     jobId: job.id,
     status: job.status,
@@ -247,6 +268,20 @@ function formatJobResultRaw(run: RunOutcome, links?: LinkRewriter): ToolResult {
         ? `${job.deliverables.length} deliverable(s); download links last ${ttlText(links.ttlSeconds)} — call get_job again after that for new ones.`
         : `${job.deliverables.length} deliverable(s); download URLs expire in ~60 minutes — re-call get_job for fresh ones.`,
     );
+  }
+
+  if (failure) {
+    structured.error = failure.reason;
+    if (failure.failedSources.length) {
+      structured.failedSources = failure.failedSources.map(({ index, source, fileRef, error }) => ({
+        index,
+        source,
+        fileRef,
+        error,
+      }));
+    }
+    structured.nextStep = failure.nextStep;
+    notes.push(failure.nextStep);
   }
 
   const text = [
