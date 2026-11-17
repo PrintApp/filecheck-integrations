@@ -1,5 +1,13 @@
 # filecheck-mcp
 
+## 0.3.6
+
+### Patch Changes
+
+- 358ebb6: When a job errors before any file is processed (every source failed: an unreachable or refused link, a missing upload), job results now say why. The verdict carries the API's reason, and `error`, `failedSources` and a `nextStep` are added (for a link: ask for a public link that downloads the file). filecheck-node declares `JobSummary.error` and `failedSources` (`FailedSource`).
+- Updated dependencies [358ebb6]
+  - filecheck-node@0.3.1
+
 ## 0.3.5
 
 ### Patch Changes
