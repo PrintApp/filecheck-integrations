@@ -23,7 +23,7 @@ const PROFILE_CODES = [
   'ua2',
 ] as const;
 
-export function registerValidatePdf(server: McpServer, { client, caps }: ToolContext): void {
+export function registerValidatePdf(server: McpServer, { client, caps, links }: ToolContext): void {
   server.registerTool(
     'validate_pdf',
     {
@@ -70,7 +70,7 @@ export function registerValidatePdf(server: McpServer, { client, caps }: ToolCon
             }),
           args.waitSeconds,
         );
-        return formatJobResult(run);
+        return formatJobResult(run, links);
       } catch (error) {
         return toolErrorResult(error);
       }

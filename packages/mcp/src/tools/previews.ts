@@ -6,7 +6,10 @@ import { resolveSource } from '../resolve-source.js';
 import { submitAndWait } from '../run-job.js';
 import { jobOutputShape, makeSourceSchema, waitSecondsSchema } from '../schemas.js';
 
-export function registerRenderPreviews(server: McpServer, { client, caps }: ToolContext): void {
+export function registerRenderPreviews(
+  server: McpServer,
+  { client, caps, links }: ToolContext,
+): void {
   server.registerTool(
     'render_previews',
     {
@@ -45,7 +48,7 @@ export function registerRenderPreviews(server: McpServer, { client, caps }: Tool
             }),
           args.waitSeconds,
         );
-        return formatJobResult(run);
+        return formatJobResult(run, links);
       } catch (error) {
         return toolErrorResult(error);
       }

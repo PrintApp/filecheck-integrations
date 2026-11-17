@@ -6,7 +6,10 @@ import { resolveSource } from '../resolve-source.js';
 import { submitAndWait } from '../run-job.js';
 import { jobOutputShape, makeSourceSchema, waitSecondsSchema } from '../schemas.js';
 
-export function registerOptimizeFile(server: McpServer, { client, caps }: ToolContext): void {
+export function registerOptimizeFile(
+  server: McpServer,
+  { client, caps, links }: ToolContext,
+): void {
   server.registerTool(
     'optimize_file',
     {
@@ -41,7 +44,7 @@ export function registerOptimizeFile(server: McpServer, { client, caps }: ToolCo
             client.jobs.optimize({ sources: [{ ...source, params: args.params ?? {} }], ...wait }),
           args.waitSeconds,
         );
-        return formatJobResult(run);
+        return formatJobResult(run, links);
       } catch (error) {
         return toolErrorResult(error);
       }
