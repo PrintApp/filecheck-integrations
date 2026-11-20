@@ -131,7 +131,9 @@ export const jobOutputShape = {
   files: z
     .array(z.object({}).passthrough())
     .optional()
-    .describe('Per-file preflight results: summary, capped findings, recommended autofix.'),
+    .describe(
+      'Per-file preflight results: summary, capped findings, recommended autofix. When a fixed file was re-checked, these come from that re-check (checkedFile: fixed) and initialCheck summarises the upload.',
+    ),
   validate: z
     .array(z.object({}).passthrough())
     .optional()
