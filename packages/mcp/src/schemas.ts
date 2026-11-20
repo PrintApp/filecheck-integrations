@@ -89,6 +89,12 @@ export const contextSchema = z
       .object({ min_mm: z.number().min(0).max(500) })
       .optional()
       .describe('Safe margin the chosen finish requires (eyelets and pole pockets eat into it).'),
+    sheet: z
+      .object({ across: z.enum(['short', 'long']) })
+      .optional()
+      .describe(
+        "Image gang sheets (DTF film, roll media): which side of the image runs across the film, as the customer said. Only needed when a result's measurements.sheet is ambiguous: without it Filecheck takes the reading whose resolution is nearest the profile's target and lists the other under alternatives.",
+      ),
   })
   .describe(
     'What the customer ordered — finished size, pages, finish. Narrows the resolved profile to the ordered product, so one profile serves every size. Only tightens checks the profile already has enabled; no effect without a profileId. Pass it whenever the product dimensions are known.',
