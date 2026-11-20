@@ -6,7 +6,7 @@ import {
   NotFoundError,
   RateLimitError,
 } from 'filecheck-node';
-import type { Artifact, FailedSource, Job, PreflightResult } from 'filecheck-node';
+import type { Artifact, FailedSource, Job, PreflightResult, Step } from 'filecheck-node';
 import type { LinkRewriter } from './capabilities.js';
 import type { RunOutcome } from './run-job.js';
 
@@ -64,10 +64,57 @@ function compactArtifact(artifact: Artifact): Record<string, unknown> {
   return rest;
 }
 
-function evaluationOf(result: PreflightResult): Evaluation | null {
-  const report = result.report as { evaluation?: Evaluation } | null;
-  return report?.evaluation ?? null;
+function evaluationOf(report: Record<string, unknown> | null): Evaluation | null {
+  return (report as { evaluation?: Evaluation } | null)?.evaluation ?? null;
 }
+
+const stepReport = (step: Step): Record<string, unknown> | null => {
+  const output = (step.outputs ?? []).find((o) => o?.kind === 'report');
+  const body = output?.body;
+  return body && typeof body === 'object' ? (body as Record<string, unknown>) : null;
+};
+
+export interface FileChecks {
+  /** The report the file's verdict rests on: the re-check of the fixed file when there is one. */
+  final: Record<string, unknown> | null;
+  /** The first preflight, of the file as uploaded. */
+  initial: Record<string, unknown> | null;
+  /** True when `final` is a re-check of the fixed file, not the upload's check. */
+  rechecked: boolean;
+  /** True when autofix ran on this file, so its output may differ from what `initial` describes. */
+  autofixed: boolean;
+}
+
+/**
+ * Which check describes a file. The API's results.preflight carries the FIRST
+ * preflight, of the upload, while the task's outcome is the LAST verdict: the
+ * re-check of the fixed file. Showing the first one's findings next to that
+ * outcome made fixed problems look unfixed (transparent_background still
+ * "reject" after background removal). The re-check's report rides on its step.
+ */
+export function fileChecks(job: Job, result: PreflightResult): FileChecks {
+  const initial = (result.report as Record<string, unknown> | null) ?? null;
+  const task = job.tasks?.find((t) => t.id === result.taskId);
+  const steps = task?.steps ?? [];
+  const autofixed = steps.some((s) => s.type === 'autofix' && s.status === 'done');
+  for (let i = steps.length - 1; i >= 0; i--) {
+    const step = steps[i]!;
+    if (step.type !== 'repreflight') continue;
+    const report = stepReport(step);
+    if (report && evaluationOf(report)) {
+      return { final: report, initial, rechecked: true, autofixed };
+    }
+  }
+  return { final: initial, initial, rechecked: false, autofixed };
+}
+
+const ruleIdsOf = (evaluation: Evaluation | null): string[] => [
+  ...new Set(
+    (evaluation?.findings ?? [])
+      .map((f) => f.ruleId)
+      .filter((id): id is string => typeof id === 'string'),
+  ),
+];
 
 export function verdictText(job: Job, pending: boolean): string {
   if (pending) return `Job ${job.id} is still processing (status: ${job.status}).`;
@@ -169,6 +216,8 @@ function formatJobResultRaw(run: RunOutcome, links?: LinkRewriter): ToolResult {
   let truncated = false;
 
   const preflights = job.results?.preflight ?? [];
+  let rechecks = 0;
+  let unrechecked = 0;
   if (preflights.length > 0) {
     structured.files = preflights.map((result) => {
       const file: Record<string, unknown> = {
@@ -178,7 +227,22 @@ function formatJobResultRaw(run: RunOutcome, links?: LinkRewriter): ToolResult {
         status: result.status,
         outcome: result.outcome ?? null,
       };
-      const evaluation = evaluationOf(result);
+      const checks = fileChecks(job, result);
+      const evaluation = evaluationOf(checks.final);
+      if (checks.rechecked) {
+        rechecks++;
+        file.checkedFile = 'fixed';
+        const before = evaluationOf(checks.initial);
+        if (before) {
+          file.initialCheck = {
+            summary: before.summary,
+            ruleIds: ruleIdsOf(before).slice(0, FINDINGS_LIMIT),
+          };
+        }
+      } else if (checks.autofixed && evaluation) {
+        unrechecked++;
+        file.checkedFile = 'original';
+      }
       if (!evaluation) {
         file.hasEvaluation = false;
         file.note =
@@ -197,6 +261,16 @@ function formatJobResultRaw(run: RunOutcome, links?: LinkRewriter): ToolResult {
       if (evaluation.recommendedAutofix) file.recommendedAutofix = evaluation.recommendedAutofix;
       return file;
     });
+    if (rechecks > 0) {
+      notes.push(
+        'Findings are from the re-check of the fixed file (checkedFile: fixed); initialCheck lists what the original upload had.',
+      );
+    }
+    if (unrechecked > 0) {
+      notes.push(
+        'Findings marked checkedFile: original describe the upload BEFORE autofix, not the fixed deliverable. Run fix_file with repreflight:true to check the fixed file.',
+      );
+    }
     if (truncated) {
       structured.findingsTruncated = true;
       notes.push('Findings were capped — use get_report for the full list.');

@@ -3,7 +3,7 @@ import type { PreflightResult } from 'filecheck-node';
 import { z } from 'zod';
 import { READ } from '../annotations.js';
 import type { ToolContext } from '../capabilities.js';
-import { jsonResult, toolErrorResult } from '../format.js';
+import { fileChecks, jsonResult, toolErrorResult } from '../format.js';
 
 const SEVERITIES = ['reject', 'warn', 'ignore'] as const;
 
@@ -15,7 +15,8 @@ export function registerGetReport(server: McpServer, { client }: ToolContext): v
       description:
         'Drill into the full preflight report of a checked file — the raw analysis (pages, fonts, images, color, spot colors, layers, …) plus the complete evaluation findings that job results cap. ' +
         'Call without `section` first for an overview of available sections and their sizes, then request one section at a time; array sections are paginated with offset/limit. ' +
-        '`severity` filters the evaluation findings instead.',
+        '`severity` filters the evaluation findings instead. ' +
+        'For a fixed file it reads the re-check of the fixed file by default, the same check get_job shows; pass check:"initial" for the upload as it was before the fix.',
       inputSchema: {
         jobId: z.string().describe('The job_… id of a completed check.'),
         taskIndex: z
@@ -34,6 +35,12 @@ export function registerGetReport(server: McpServer, { client }: ToolContext): v
           .enum(SEVERITIES)
           .optional()
           .describe('Return only evaluation findings of this severity (overrides section).'),
+        check: z
+          .enum(['final', 'initial'])
+          .optional()
+          .describe(
+            "Which check to read: 'final' (default) is the re-check of the fixed file when the job re-checked one, else the only check; 'initial' is the check of the upload before any fix.",
+          ),
         offset: z
           .number()
           .int()
@@ -51,6 +58,9 @@ export function registerGetReport(server: McpServer, { client }: ToolContext): v
       outputSchema: {
         jobId: z.string(),
         taskIndex: z.number(),
+        checkedFile: z
+          .enum(['original', 'fixed'])
+          .describe('Whether this report describes the upload or the fixed file.'),
         section: z.string().optional(),
         sections: z
           .array(z.object({}).passthrough())
@@ -78,7 +88,10 @@ export function registerGetReport(server: McpServer, { client }: ToolContext): v
             ),
           );
         }
-        const report = result.report as Record<string, unknown> | null;
+        const checks = fileChecks(job, result);
+        const useFinal = args.check !== 'initial';
+        const report = useFinal ? checks.final : checks.initial;
+        const checkedFile = useFinal && checks.rechecked ? 'fixed' : 'original';
         if (!report) {
           return toolErrorResult(
             new Error(`No report is stored for file ${taskIndex} of job ${args.jobId}.`),
@@ -87,7 +100,7 @@ export function registerGetReport(server: McpServer, { client }: ToolContext): v
 
         const offset = args.offset ?? 0;
         const limit = args.limit ?? 50;
-        const base = { jobId: args.jobId, taskIndex };
+        const base = { jobId: args.jobId, taskIndex, checkedFile };
 
         if (args.severity) {
           const evaluation = report.evaluation as
@@ -144,7 +157,7 @@ export function registerGetReport(server: McpServer, { client }: ToolContext): v
         }));
         return jsonResult(
           { ...base, sections },
-          `Report for file ${taskIndex} of job ${args.jobId} — ${sections.length} sections. Request one via 'section'.`,
+          `Report for file ${taskIndex} of job ${args.jobId}${checkedFile === 'fixed' ? ' (re-check of the fixed file)' : ''} — ${sections.length} sections. Request one via 'section'.`,
         );
       } catch (error) {
         return toolErrorResult(error);

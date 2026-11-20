@@ -13,7 +13,7 @@ export function registerFixFile(server: McpServer, { client, caps, links }: Tool
       title: 'Fix a print file automatically',
       description:
         'Preflight a file, apply every safe automatic fix, and (by default) re-check the fixed output. The fixed file is returned as a deliverable — use IT, not the original. ' +
-        'outcome:fixed means issues were repaired; outcome:fail after a repreflight means problems remain that autofix cannot solve. ' +
+        'outcome:fixed means issues were repaired; outcome:fail after a repreflight means problems remain that autofix cannot solve. With the re-check, the findings describe the FIXED file; initialCheck lists what the upload had. ' +
         '`status` is execution, `outcome` is the verdict — read both. If pending, poll get_job; never resubmit.',
       inputSchema: {
         source: makeSourceSchema(caps),
