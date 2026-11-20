@@ -56,6 +56,11 @@ export interface JobContext {
   bleed?: { required_mm?: number };
   /** Safe margin the chosen finish requires. */
   safety?: { min_mm?: number };
+  /**
+   * Image gang sheets: which side of the image runs across the film, as the
+   * customer said. Settles a sheet the API reports as `ambiguous`.
+   */
+  sheet?: { across: 'short' | 'long' };
 }
 
 /** `POST /jobs`. */
